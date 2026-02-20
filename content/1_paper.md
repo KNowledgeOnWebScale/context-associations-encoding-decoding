@@ -129,18 +129,35 @@ in an RDF dataset. Specifically, closed shapes in SHACL can be used, with prior 
 SPARQL queries to perform said extraction [todo:find-and-cite].
 
 ### URI references
-Finally, many models, such as ODRL, DCAT, uniformly annotation content from the default graph, 
-using resource URIs as external references to the content they are defining information over.
+Finally, most data models aimed at annotating information using the Resource Description Framework (RDF),
+use the RDF default graph to annotate external resources using triple statements, used by models such as 
+ODRL, DCAT and most other prevalent annotation models.
+The exact interpretation of how the target resources should be interpreted by a client, depend on the 
+specification associated to the annotation vocabulary, but is well understood to default to HTTP dereferencing.
+[TODO: this needs to incorporate more that pretty much all triples including links to external resources can be interpreted as this]
+
 
 
 ## Context Associations
+With Context Associations, our aim is to provide a general approach for modeling associations
+of context to target data in RDF knowledge graphs, that can be contained within both the RDF 1.1 
+syntax and be queried through SPARQL 1.1 to extract data with all associated metadata from RDF graphs.
+
+
 
 
 ## Demonstration
 
-piece of code to translate an example nanopub to context associations
 piece of code to translate an example RO-Create to context associations
+
+
+piece of code to translate an example nanopub to context associations
+  Nanopublication stating that 
+
 piece of code to translate an example VC to context associations
+  VC defining author associated with university.
+
+
 merge all outputs in a triplestore
 one query to show 'what types of metadata are asociated with my target data'
 reverse piece/pieces of code to translate context associations to originals
@@ -148,6 +165,50 @@ reverse piece/pieces of code to translate context associations to originals
 We demonstratie that---for each of the aforementioned annotation systems---metadata statements can be uniformly associated with target statements and queried across applications.
 Full reconstruction of the original formats from their Context Association representation
 is feasible when application-specific implied modeling information is made explicit.
+
+## SPARQL evaluation
+
+### SPARQL 1.1
+Using default SPARQL 1.1 evaluation, there is no native support for arbitrary-length property paths over named graphs.
+
+**Selection problem**
+
+This requires us to be able to get the anchor triples in the default graph, so we can evaluate them with SPARQL property paths.
+This can be achieved either by: (i) storing the anchor triples in the default graph, (ii) pre-running an indexing query that lifts the anchor triple to the default graph, or (iii) making use of Apache ARQ-specific `GRAPH <urn:x-arq:UnionGraph> { ... }` graph, that contains the flattened content of all named graphs.
+
+Based on this index, the resulting context chains can be retrieved by following the `?g ca:aboutGraph* ?seed` predicate paths of arbitrary lengths.
+
+**Extraction problem**
+
+The SPARQL 1.1 specification does not support the creation of named graphs in the Construct-clause of a construct query,
+requiring either the retrieval of all relevant graph names, after which the individual graphs can be extracted from the knowledge graph.
+
+Alternatively, Apache Jena ARQ does support the use of `GRAPH <name> { ... }` in a SPARQL Construct clause, 
+enabling a direct extraction of the relevant graphs from the RDF knowledge graph.
+
+
+Apache Jena ARQ supports the direct extraction of the full chain through the following query: 
+```
+PREFIX :  <http://example.org/ns#>
+PREFIX ca: <https://w3id.org/context-associations>
+
+CONSTRUCT { GRAPH ?g { ?s ?p ?o } } 
+WHERE {
+  # Binding the seed graph based on a content query 
+  # Or directly on the seed graph URL if it is known
+  GRAPH ?seed { :x :y :z . }
+  # In the unified graph of all named graphs, we evaluate the path expression
+  GRAPH <urn:x-arq:UnionGraph> {
+    ?g ca:about* ?seed .
+  }
+  # Then we bind the graph contents
+  GRAPH ?g { ?s ?p ?o }
+}
+```
+
+
+
+
 
 ## Comparison
 
