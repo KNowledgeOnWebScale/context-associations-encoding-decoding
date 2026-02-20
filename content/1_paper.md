@@ -10,27 +10,35 @@ so when integrating both the contextual metadata as the target data in a triples
 it is hard to distinguish metdata from the target data
 (especially when, e.g., the quality measurents themselves also haven contextual metadata annotations).
 
-We see that
-the association between contextual information and target data
+We see that the association between contextual information and target data
 often depends on application-specific specifications and protocol definitions,
-as we see in mature annotation systems
-such as DQV [cite spec], nanopublications [footnote], RO-Crates [footnote], and W3C Verifiable Credentials (VCs) [cite spec].
+as we see in mature annotation systems such as DQV [](cite:cites w3c-dqv-20161215), nanopublications [^nanopublications], 
+RO-Crates [^rocrates], and W3C Verifiable Credentials (VCs) [](cite:cites w3c-vc-data-model-2-20250515).
 
-In DQV, contextual information is associated through specific triples typed as class `dqv:QualityAnnotation` or `dqv:QualityMeasurement`
-with the relations `oa:hasTarget` (reusing the Web Annotation association model) or `dqv:computedOn` to the target dataset or distribution, respectively [cite spec or better].
+[^nanopublications]: Nanopublication Guidelines: https://nanopub.net/guidelines/working_draft/
+[^rocrates]: RO-Crate Metadata Specification: https://w3id.org/ro/crate/1.2 
+
+In DQV, contextual information is associated through specific triples typed 
+as class `dqv:QualityAnnotation` or `dqv:QualityMeasurement` with the relations 
+`oa:hasTarget` (reusing the Web Annotation association model) or 
+`dqv:computedOn` to the target dataset or distribution, respectively [cite spec or better].
 In the Nanopublication specification, contextual information is associated
-through explicit graph structuring:
-nanopublication is composed of four named graphs---Head, Assertion, Provenance, and PublicationInfo---and
-the Head graph uses predicates such as np:hasAssertion, np:hasProvenance, and np:hasPublicationInfo to relate the nanopublication resource to its constituent graphs [cite spec].
+through explicit graph structuring: nanopublication is composed of four named 
+graphs---Head, Assertion, Provenance, and PublicationInfo---and
+the Head graph uses predicates such as `np:hasAssertion`, `np:hasProvenance`, and `np:hasPublicationInfo` 
+to relate the nanopublication resource to its constituent graphs [cite spec].
 In RO-Crate, contextual information is associated implicitly
 through the JSON-LD graph structure of the RO-Crate Metadata Document using existing vocabularies (e.g., Schema.org) where relationships between entities (e.g., dataset → file, file → creator) are encoded as linked properties in the `@graph` [cite spec].
 In the VC Data Model specification, contextual information is associated through an explicit credential structure: a verifiable credential is composed of core properties such as `credentialSubject` to link to the identified subject resource, and `proof` to bind the credential to a cryptographic verification method [cite spec].
 Through JSON-LD expansion and with accompanying W3C CCG Note “RDF Dataset Canonicalization and Hashing” and related Data Integrity specifications, Verifiable Credentials can be interpreted as RDF datasets for the purpose of canonicalization and cryptographic proof generation [cite spec].
 
-As can be seen,
-these association methods are not aligned and not always explicit at the data level.
-When, e.g., asserting data quality,
-this mismatch in association methods across applications
+<!-- ODRL? -->
+Finally, the Open Digital Rights Language (ODRL) specification defines the resource to which the policy is associated either through a `odrl:hasPolicy` predicate, defined over the resource, or inveresely the resource can be linked from the policy using the `odrl:target` property. This policy target is defined in the specification as a resource or a collection of resources that are the subject of a Rule.
+<!-- ODRL? -->
+<!-- Data Cube Vocabulary? https://www.w3.org/TR/vocab-data-cube/ -->
+
+As can be seen, these association methods are not aligned and not always explicit at the data level.
+When, e.g., asserting data quality, this mismatch in association methods across applications
 limits uniform storage, exchange, and discovery of metadata linked to a target set of statements.
 
 In this paper, we present Context Associations:
@@ -68,7 +76,7 @@ Over the years, many data-modeling approaches are introduced for annotating cont
 mostly using RDF reification, named graphs, and triple terms.
 Solutions such as tSPARQL are left out of scope as these require SPARQL extensions and are thus not interoperable.
 
-The work of Müller et al. [Müller2019EvaluationMetatdataRepresentations] gives an overview
+The work of Müller et al. [](cite:cites frey2019evaluation) gives an overview
 of metadata representation models that are part of the RDF model, namely,
 RDF reification, singleton properties, and named graphs.
 They conclude that while reification offers fine-grained statement-level annotation,
@@ -92,6 +100,56 @@ TODO
 TODO complement with current association models within the protocol: subject-based referencing, graph-based referencing, out-of-band referencing.
 
 ## Method
+
+In this work, we will evaluate the metadata annotation methods available in RDF.
+
+[todo: semantics discussions?]
+
+### Reification
+The concept of reification was introduced with version 1.0 of the RDF specification [https://www.w3.org/TR/rdf-mt/#Reif] and RDF Schema vocabulary [https://www.w3.org/2001/sw/RDFCore/TR/WD-rdf-schema-20030117/#ch_reificationvocab], as a way to deconstruct triples to a set of triples defining the subject, predicate and object of the reified triple. Sharing a subject, this set of reified triples can then be referenced by metadata in the RDF graph.
+
+### Singleton property
+Singleton properies are a proposed method in RDF to overload a triple predicate, similar to the working of Labeled Property Graphs [TODO:cite], 
+in which the predicate is replaced by an instanced predicate, derived from the original predicate, that can be referenced in other statements to associate contextual information to the original relation.
+
+### Named graphs
+Named graphs were introduced in the RDF syntax with version 1.1 of the RDF specification [todo:cite].
+Many specifications, such as Nanopublications [^nanopublications], 
+make use of these named graphs to organize their contents and associated context in these graphs.
+
+### Hybrid use of named graph and default graph
+Specifications such as W3C Verifiable Credentials [cite], generate metadata assocaitions 
+that annotate the contents of the default graph, making use of named graphs to store the metadata definitions.
+This allows them to provide a consistent JSON structure, while also being interoperable with RDF through JSON-LD.
+However, this reliance on the default graph breaks the  is lost when merging the credential into RDF Knowledge Graphs.
+
+### Shapes
+Shape expressions such as SHACL [todo:cite] and SHEX [todo:cite] can be used to define a specific selection of data 
+in an RDF dataset. Specifically, closed shapes in SHACL can be used, with prior work of converting shape expressions to
+SPARQL queries to perform said extraction [todo:find-and-cite].
+
+### URI references
+Finally, many models, such as ODRL, DCAT, uniformly annotation content from the default graph, 
+using resource URIs as external references to the content they are defining information over.
+
+
+## Context Associations
+
+
+## Demonstration
+
+piece of code to translate an example nanopub to context associations
+piece of code to translate an example RO-Create to context associations
+piece of code to translate an example VC to context associations
+merge all outputs in a triplestore
+one query to show 'what types of metadata are asociated with my target data'
+reverse piece/pieces of code to translate context associations to originals
+
+We demonstratie that---for each of the aforementioned annotation systems---metadata statements can be uniformly associated with target statements and queried across applications.
+Full reconstruction of the original formats from their Context Association representation
+is feasible when application-specific implied modeling information is made explicit.
+
+## Comparison
 
 TODO include table that gives overview of (✅, ❓, or ❌)
 
@@ -125,30 +183,18 @@ tSPARQL and RO-Crate are taken out of scope as tSPARQL needs custom extensions a
 TODO: explain: metadata as graph, within that graph point to 'target' graph
 for sharing as a package
 
-## Demonstration
-
-piece of code to translate an example nanopub to context associations
-piece of code to translate an example RO-Create to context associations
-piece of code to translate an example VC to context associations
-merge all outputs in a triplestore
-one query to show 'what types of metadata are asociated with my target data'
-reverse piece/pieces of code to translate context associations to originals
-
-We demonstratie that---for each of the aforementioned annotation systems---metadata statements can be uniformly associated with target statements and queried across applications.
-Full reconstruction of the original formats from their Context Association representation
-is feasible when application-specific implied modeling information is made explicit.
-
 ## Conclusion
 
 Context Associations is an approach and associated specification and tooling
-that allows to more explicitly state how context is associated with target RDF data, using default RDF 1.1 features.
-Where other systems introduce custom association methods, do not support annotating all types of RDF statements, or introduce the risk of collisions when merging different metadata in a single triplestore,
+that allows to more explicitly state how context is associated with target data in RDF Knowledge Graphs, 
+using default RDF 1.1 features.
+Where other systems introduce custom association methods, do not support annotating all types of RDF statements, 
+or introduce the risk of collisions when merging different metadata in a single triplestore,
 Context Associations can be used to losslessly convert data coming from these other systems into a single model.
-We show how Context Associations allows you to merge all kinds of data in a single RDF store and use a single query to discover which types of metadata are associated with which target data, across all original systems.
+We show how Context Associations allows you to merge all kinds of data in a single RDF store and use a single query 
+to discover which types of metadata are associated with which target data, across all original systems.
 
 By providing a uniform representation of context statements associated with target RDF statements,
 we enable discovery, exchange, storage, and processing of heterogenous contextual metadata annotations.
 
 ## References
-
-[Müller2019EvaluationMetatdataRepresentations]: Frey, J., Müller, K., Hellmann, S., Rahm, E., Vidal, M.-E.: Evaluation of metadata representations in RDF stores. Semantic Web. 10, 205–229 (2019).
