@@ -148,14 +148,19 @@ syntax and be queried through SPARQL 1.1 to extract data with all associated met
 
 ## Demonstration
 
+
+### RO-Crate
 piece of code to translate an example RO-Create to context associations
 
-
+### Nanopublication
 piece of code to translate an example nanopub to context associations
   Nanopublication stating that 
 
+### Verifiabe credentials
 piece of code to translate an example VC to context associations
   VC defining author associated with university.
+
+### ODRL Policy
 
 
 merge all outputs in a triplestore
@@ -168,43 +173,84 @@ is feasible when application-specific implied modeling information is made expli
 
 ## SPARQL evaluation
 
-### SPARQL 1.1
-Using default SPARQL 1.1 evaluation, there is no native support for arbitrary-length property paths over named graphs.
+Through SPARQL 1.1 evaluation, we face two problems when evaluating context assocations making use of named graphs in RDF Datasets.
+The first problem is that the only way we can support the evaluation of the metadata chains through SPARQL is by making use of the property-paths in SPARQL. These however are not supported over named graphs, only in the default graph or within a single named graph.
+Therefor, we first need to extract the anchor triples into the default graph.
 
-**Selection problem**
+<figure id="my-code" class="listing">
+```PREFIX ca: <https://w3id.org/context-associations>
+CONSTRUCT { ?source ca:about ?target }
+WHERE { GRAPH ?source { ?source ca:about ?target } }```
+<figcaption markdown="block">
+Extraction of the anchor triples into the default graph.
+</figcaption>
+</figure>
 
-This requires us to be able to get the anchor triples in the default graph, so we can evaluate them with SPARQL property paths.
-This can be achieved either by: (i) storing the anchor triples in the default graph, (ii) pre-running an indexing query that lifts the anchor triple to the default graph, or (iii) making use of Apache ARQ-specific `GRAPH <urn:x-arq:UnionGraph> { ... }` graph, that contains the flattened content of all named graphs.
+Over this set of anchoring triples, we can now evalaute the chains using the SPARQL property paths.
+<!-- This can either be done by maintaining a separate index as well, or creating it ad-hoc, since we cannot extract the full graphs yet anyways. -->
+And here we encounter the second problem, in the lack of native support for creating named graphs as the ouput of a SPARQL Construct evaluation.
+The `GRAPH` keyword is only supported in the `WHERE` clause of a SPARQL query, but not in the `CONSTRUCT` clause.
+Because of this, the exctraction of all graphs in a metadata chain from an RDF Dataset requires multiple separate iterations in SPARQL 1.1. 
+The first step is the extraction of all named graph identifiers that chain towards a target graph.
+This target named graph can be pointed to either by it's name identifier, or through a triple matching using the `GRAPH` keyword.
+Since the property path operator `*` matches chains from length zero, it will also match the target named graph containing the data.
 
-Based on this index, the resulting context chains can be retrieved by following the `?g ca:aboutGraph* ?seed` predicate paths of arbitrary lengths.
-
-**Extraction problem**
-
-The SPARQL 1.1 specification does not support the creation of named graphs in the Construct-clause of a construct query,
-requiring either the retrieval of all relevant graph names, after which the individual graphs can be extracted from the knowledge graph.
-
-Alternatively, Apache Jena ARQ does support the use of `GRAPH <name> { ... }` in a SPARQL Construct clause, 
-enabling a direct extraction of the relevant graphs from the RDF knowledge graph.
-
-
-Apache Jena ARQ supports the direct extraction of the full chain through the following query: 
-```
-PREFIX :  <http://example.org/ns#>
-PREFIX ca: <https://w3id.org/context-associations>
-
-CONSTRUCT { GRAPH ?g { ?s ?p ?o } } 
-WHERE {
-  # Binding the seed graph based on a content query 
-  # Or directly on the seed graph URL if it is known
-  GRAPH ?seed { :x :y :z . }
-  # In the unified graph of all named graphs, we evaluate the path expression
-  GRAPH <urn:x-arq:UnionGraph> {
-    ?g ca:about* ?seed .
-  }
-  # Then we bind the graph contents
-  GRAPH ?g { ?s ?p ?o }
+<figure id="my-code" class="listing">
+```PREFIX ca: <https://w3id.org/context-associations>
+SELECT ?source WHERE {
+  GRAPH ?target { <subj> <pred> <obj> . }
+  ?source ca:about* ?target .
 }
 ```
+<figcaption markdown="block">
+Extraction of the metadata named graph chain.
+</figcaption>
+</figure>
+
+Finally, the extraction of the individual graphs from the graph store, requires an iteration over every extracted graph identifier
+in the previous step, which is then constructed as the output graph.
+
+<figure id="my-code" class="listing">
+FOR EACH <graph> in extractedGraphs: 
+<graph> {
+```PREFIX ca: <https://w3id.org/context-associations>
+CONSTRUCT { ?subj ?pred ?obj }
+WHERE { GRAPH <graph> { ?subj ?pred ?obj } }
+```
+}
+<figcaption markdown="block">
+Extraction of the individual graphs
+</figcaption>
+</figure>
+
+
+
+**APACHE JENA ARQ**
+To solve the problems encountered in the extraction of the metadata chains, especially the lack of support for constructing graphs, which is impossible to work around in the native SPARQL evaluation, we can make use of the ARQ query engine provided by Apache Jena [TODO:CITE].
+This SPARQL processor provides two functions that extend beyond the SPARQL specification, which allow us to perform the extraction in a single iteration.
+
+Firstly, where the extraction of anchor triples can be worked around by storing them in the default graph, 
+with ARQ can work around this problem making use of a provided union graph, under the identifier `urn:x-arq:UnionGraph`. 
+This is a materialized union of the named graphs present in the queried RDF dataset, which allows us to extract the anchor triples from all graphs in one iteration. Secondly, ARQ supports the creation of named graphs in the `CONSTRUCT` clause of a SPARQL query. 
+This enables us to directly re-create the named graphs in the metadata chain, without having to iterate separately over each graph.
+
+
+<figure id="my-code" class="listing">
+
+```
+PREFIX ca: <https://w3id.org/context-associations>
+CONSTRUCT { GRAPH ?g { ?s ?p ?o } } 
+WHERE {
+  GRAPH ?target { <x> <y> <z> . }
+  GRAPH <urn:x-arq:UnionGraph> {
+    ?source ca:about* ?target .
+  }
+  GRAPH ?source { ?s ?p ?o }
+}```
+<figcaption markdown="block">
+Extraction of the named graphs metadata chains with a single construct query using Apache Jena ARQ.
+</figcaption>
+</figure>
 
 
 
