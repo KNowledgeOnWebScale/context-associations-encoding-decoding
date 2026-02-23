@@ -1,0 +1,3 @@
+PREFIX ca: <https://w3id.org/context-associations>
+CONSTRUCT { ?subj ?pred ?obj }
+WHERE { GRAPH <graph> { ?subj ?pred ?obj } }

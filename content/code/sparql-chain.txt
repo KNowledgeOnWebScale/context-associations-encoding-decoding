@@ -1,0 +1,6 @@
+
+PREFIX ca: <https://w3id.org/context-associations>
+SELECT ?source WHERE {
+  GRAPH ?target { <subj> <pred> <obj> . }
+  ?source ca:about* ?target .
+}
