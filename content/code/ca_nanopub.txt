@@ -6,29 +6,31 @@
 @prefix ex:    <http://example.org/> .
 @prefix this:  <http://example.org/nanopub/np1#> .
 
-# --- Head graph: ties the nanopub parts together
 this:Head {
+  this:Head ca:aboutGraph this:Assertion.
+  this:Head ca:aboutGraph this:Provenance.
+  this:Head ca:aboutGraph this:PubInfo.
+
   this:np1 a np:Nanopublication ;
     np:hasAssertion       this:Assertion ;
     np:hasProvenance      this:Provenance ;
     np:hasPublicationInfo this:PubInfo .
 }
 
-# --- Assertion graph: the actual claim
 this:Assertion {
   ex:Paris ex:isCapitalOf ex:France .
 }
 
-# --- Provenance graph: where the claim came from / how it was produced
 this:Provenance {
+  this:Provenance ca:aboutGraph this:Assertion.
   this:Assertion
     prov:wasDerivedFrom <https://www.wikidata.org/entity/Q90> ;
     prov:wasAttributedTo ex:Alice ;
     prov:generatedAtTime "2026-02-19T10:30:00Z"^^xsd:dateTime .
 }
 
-# --- Publication info graph: metadata about publishing the nanopub
 this:PubInfo {
+  this:PubInfo ca:aboutGraph this:Assertion.
   this:np1
     pav:createdBy ex:Alice ;
     dct:created "2026-02-19T10:31:00Z"^^xsd:dateTime ;

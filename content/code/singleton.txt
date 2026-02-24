@@ -1,0 +1,8 @@
+_:target { 
+    <subject> <property#singleton> <object> .
+    <property#singleton> rdf:singletonPropertyOf <property>.
+}
+_:source { 
+    _:source ca:aboutGraph _:target.
+    <property#singleton> <has> <metadata>.
+}

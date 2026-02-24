@@ -3,8 +3,7 @@
 
 <!-- context -->
 Data quality is asserted through contextual metadata annotations.
-However,
-the association between contextual information and target data
+However, the association between contextual information and _selections of target data within RDF Knowledge Graphs_{:.propose}
 often depends on application-specific specifications and protocol definitions,
 as we see in mature annotation systems
 such as nanopublications, RO-Crates, and W3C Verifiable Credentials (VCs).
@@ -16,7 +15,7 @@ limits uniform storage, exchange, and discovery of metadata linked to a target s
 <!-- task -->
 We present Context Associations:
 a uniform approach to model and query
-which metadata is associated with which sets of statements in an RDF dataset.
+which metadata is associated with which _sets of_{:.remove} statements in an RDF knowledge graphs.
 <!-- object -->
 This is achieved through a lossless and reversible conversion of existing association methods into a single association model leveraging blank node graphs.
 <!-- evaluation -->
@@ -26,3 +25,15 @@ is feasible when application-specific implied modeling information is made expli
 <!-- conclusion -->
 By providing a uniform representation of context statements associated with target RDF statements,
 we enable discovery, exchange, storage, and processing of heterogenous contextual metadata annotations.
+
+{:.comment data-author="RubenD"}
+We should decide: Let's only talk about RDF Knowledge graphs, not RDF datasets in the abstract. Similarly, let's find a consistent narrative on annotation - association terminology.
+
+
+<!-- 
+
+Abstract sent via mail:
+
+ The Resource Description Framework has inspired many data-modeling approaches for annotating contextual metadata about data, ranging from descriptions of external resources to internal annotations via RDF reification, named graphs, and triple terms. In many annotation systems, such as nanopublications, RO-Crates, W3C Verifiable Credentials, and ODRL policies, the association between contextual information and target data depends on system-specific interpretations that are often specified out of band in specifications and protocol definitions. As a result, these associations are not explicitly represented at the data level, which limits uniform storage, exchange, and discovery of metadata linked to a target set of statements across systems. To address this, we present Context Associations as a uniform approach for modeling and querying which metadata is associated with which sets of statements in an RDF dataset. This is achieved through a lossless and reversible conversion of existing data models into a single association model. We show that, for the annotation mechanisms mentioned above, such conversion may require explicitly modeling information that is implicit in the source model and its specification. We evaluate the approach by demonstrating that, for each of these annotation mechanisms, metadata statements can be uniformly associated with target graphs and external resources and queried in a common way, while retaining the ability to fully reconstruct the original formats from their representation as Context Associations in an RDF dataset. By providing a uniform representation of context statements associated with target RDF triples, we enable discovery, exchange, storage, and processing of heterogeneous RDF-based artifacts within a single data source.
+
+ -->

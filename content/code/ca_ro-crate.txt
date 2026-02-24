@@ -1,0 +1,32 @@
+
+_:graph1 {
+    _:graph1 rdf:about <https://ro-crate.base/survey-responses-2019.csv>.
+    <https://ro-crate.base/survey-responses-2019.csv> <http://schema.org/contentSize> "26452" .
+    <https://ro-crate.base/survey-responses-2019.csv> <http://schema.org/encodingFormat> "text/csv" .
+    <https://ro-crate.base/survey-responses-2019.csv> <http://schema.org/name> "Survey responses" .
+    <https://ro-crate.base/survey-responses-2019.csv> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+}
+
+_:graph2 {
+    _:graph2 rdf:about <https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf>
+    <https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf> <http://schema.org/contentSize> "310691" .
+    <https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf> <http://schema.org/description> "RO-Crate specification" .
+    <https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf> <http://schema.org/encodingFormat> "application/pdf" .
+    <https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf> <http://schema.org/name> "RO-Crate specification" .
+    <https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+}
+
+_:graph3 {
+    _:graph3 ca:aboutGraph _:graph3, _:graph2.
+    <https://ro-crate.base/ro-crate-metadata.json> <http://purl.org/dc/terms/conformsTo> <https://w3id.org/ro/crate/1.1> .
+    <https://ro-crate.base/ro-crate-metadata.json> <http://schema.org/about> <https://ro-crate.base/> .
+    <https://ro-crate.base/ro-crate-metadata.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/CreativeWork> .
+}
+
+_:graph4 {
+    _:graph4 ca:aboutGraph _:graph3, _:graph2.
+    <https://ro-crate.base/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Dataset> .
+    <https://ro-crate.base/> <http://schema.org/hasPart> <https://ro-crate.base/survey-responses-2019.csv> .
+    <https://ro-crate.base/> <http://schema.org/hasPart> <https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf> .
+}
+

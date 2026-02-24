@@ -1,1 +1,15 @@
-Code listing RO-crate
+<https://example.org/> <http://schema.org/hasPart> <https://example.org/survey-responses-2019.csv> .
+<https://example.org/> <http://schema.org/hasPart> <https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf> .
+<https://example.org/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Dataset> .
+<https://example.org/ro-crate-metadata.json> <http://purl.org/dc/terms/conformsTo> <https://w3id.org/ro/crate/1.1> .
+<https://example.org/ro-crate-metadata.json> <http://schema.org/about> <https://example.org/> .
+<https://example.org/ro-crate-metadata.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/CreativeWork> .
+<https://example.org/survey-responses-2019.csv> <http://schema.org/contentSize> "26452" .
+<https://example.org/survey-responses-2019.csv> <http://schema.org/encodingFormat> "text/csv" .
+<https://example.org/survey-responses-2019.csv> <http://schema.org/name> "Survey responses" .
+<https://example.org/survey-responses-2019.csv> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf> <http://schema.org/contentSize> "310691" .
+<https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf> <http://schema.org/description> "RO-Crate specification" .
+<https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf> <http://schema.org/encodingFormat> "application/pdf" .
+<https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf> <http://schema.org/name> "RO-Crate specification" .
+<https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .

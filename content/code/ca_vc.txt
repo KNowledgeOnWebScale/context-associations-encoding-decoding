@@ -1,0 +1,27 @@
+_:metadata {
+    _:metadata ca:aboutGraph _:data, _:proof.
+
+    _:credential <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/vocab#CountryFactCredential> .
+    _:credential <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://www.w3.org/2018/credentials#VerifiableCredential> .
+    _:credential <https://w3id.org/security#proof> _:proof .
+    _:credential <https://www.w3.org/2018/credentials#credentialSubject> <https://example.org/id/france> .
+    _:credential <https://www.w3.org/2018/credentials#evidence> <https://www.wikidata.org/entity/Q90> .
+    _:credential <https://www.w3.org/2018/credentials#issuer> <https://example.org/issuers/alice> .
+    _:credential <https://www.w3.org/2018/credentials#validFrom> "2026-02-19T10:31:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+}
+
+_:data {
+    <https://example.org/id/france> <https://example.org/vocab#capital> <https://example.org/id/paris> .
+}
+
+_:proof {
+    _:proof ca:aboutGraph _:data.
+
+    _:b1 <http://purl.org/dc/terms/created> "2026-02-19T10:32:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>.
+    _:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://w3id.org/security#DataIntegrityProof>.
+    _:b1 <https://w3id.org/security#cryptosuite> "eddsa-rdfc-2022"^^<https://w3id.org/security#cryptosuiteString>.
+    _:b1 <https://w3id.org/security#proofPurpose> <https://w3id.org/security#assertionMethod>.
+    _:b1 <https://w3id.org/security#proofValue> "zThisIsANonValidPlaceholderSignatureValue"^^<https://w3id.org/security#multibase>.
+    _:b1 <https://w3id.org/security#verificationMethod> <https://example.org/issuers/alice#key-1>.
+}
+
