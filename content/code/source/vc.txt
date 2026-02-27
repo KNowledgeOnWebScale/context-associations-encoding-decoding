@@ -1,0 +1,54 @@
+# Company VC
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/ns/credentials/examples/v2"
+  ],
+  "id": "urn:uuid:2b0b0f3d-0d51-4a8f-8b15-3c0ed5b8f4c1",
+  "type": ["VerifiableCredential", "OrganizationMembershipCredential"],
+  "issuer": "did:example:company",
+  "issuanceDate": "2026-02-25T10:00:00Z",
+  "credentialSubject": {
+    "id": "https://people.org/Alice",
+    "memberOf": {
+      "id": "https://company.com",
+      "name": "Company",
+      "role": "Intern"
+    }
+  },
+  "proof": {
+    "type": "Ed25519Signature2020",
+    "created": "2026-02-25T10:00:00Z",
+    "proofPurpose": "assertionMethod",
+    "verificationMethod": "did:example:issuer-company-a#key-1",
+    "proofValue": "z3m8R1aBcDeF...gHiJkLmNoPqRsTuVwXyZ"
+  }
+}
+
+
+# University VC.
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/ns/credentials/examples/v2"
+  ],
+  "id": "urn:uuid:8c0e9e1f-3f4a-44f4-9d8c-c4b2d1a7f933",
+  "type": ["VerifiableCredential", "OrganizationMembershipCredential"],
+  "issuer": "did:example:university",
+  "issuanceDate": "2026-02-25T10:05:00Z",
+  "credentialSubject": {
+    "id": "https://people.org/Alice",
+    "memberOf": {
+      "id": "https://university.org",
+      "name": "University Organization",
+      "role": "PhD student"
+    }
+  },
+  "proof": {
+    "type": "Ed25519Signature2020",
+    "created": "2026-02-25T10:05:00Z",
+    "proofPurpose": "assertionMethod",
+    "verificationMethod": "did:example:issuer-university-b#key-1",
+    "proofValue": "zN9vQa1sT7yU3iO...0cVbR8eD4fGhJzZnY"
+  }
+}

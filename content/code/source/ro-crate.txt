@@ -1,0 +1,41 @@
+{ 
+    "@context": [ 
+        "https://w3id.org/ro/crate/1.1/context", 
+        { "@base": "https://dataspaces.org/alice/crate/" }
+    ],
+    "@graph": [
+        {
+        "@id": "https://dataspaces.org/alice/crate/ro-crate-metadata.json",
+        "@type": "CreativeWork",
+            "about": { "@id": "https://dataspaces.org/alice/crate/" }
+        },
+        {
+            "@id": "https://dataspaces.org/alice/crate/",
+            "@type": "Dataset",
+            "name": "Research Crate",
+            "hasPart": [
+                { "@id": "https://dataspaces.org/alice/crate/publication.pdf" },
+                { "@id": "https://dataspaces.org/alice/crate/dataset.csv" }
+            ]
+        },
+        {
+            "@id": "https://dataspaces.org/alice/crate/publication.pdf",
+            "@type": "ScholarlyArticle",
+            "name": "My Paper",
+            "author": { "@id": "https://people.org/Alice" },
+            "encodingFormat": "application/pdf"
+        },
+        {
+            "@id": "https://dataspaces.org/alice/crate/dataset.csv",
+            "@type": "Dataset",
+            "name": "My Dataset",
+            "encodingFormat": "text/csv",
+            "creator": { "@id": "https://people.org/Alice" }
+        },
+        {
+            "@id": "https://people.org/Alice",
+            "@type": "Person",
+            "name": "Alice"
+        }
+    ]
+}

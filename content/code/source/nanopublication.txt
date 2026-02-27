@@ -16,21 +16,22 @@ this:Head {
 
 # --- Assertion graph: the actual claim
 this:Assertion {
-  ex:Paris ex:isCapitalOf ex:France .
+  <https://dataspaces.org/alice/crate/dataset.csv> dct:publisher <https://people.org/Alice> .
+  <https://dataspaces.org/alice/crate/publication.pdf> dct:publisher <https://people.org/Alice> .
 }
 
 # --- Provenance graph: where the claim came from / how it was produced
 this:Provenance {
   this:Assertion
-    prov:wasDerivedFrom <https://www.wikidata.org/entity/Q90> ;
-    prov:wasAttributedTo ex:Alice ;
+    prov:wasDerivedFrom <https://dataspaces.org/alice/crate/> ;
+    prov:wasAttributedTo <https://people.org/Alice> ;
     prov:generatedAtTime "2026-02-19T10:30:00Z"^^xsd:dateTime .
 }
 
 # --- Publication info graph: metadata about publishing the nanopub
 this:PubInfo {
   this:np1
-    pav:createdBy ex:Alice ;
+    pav:createdBy <https://people.org/Alice> ;
     dct:created "2026-02-19T10:31:00Z"^^xsd:dateTime ;
     dct:license <https://creativecommons.org/licenses/by/4.0/> .
 }

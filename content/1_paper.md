@@ -189,8 +189,6 @@ to modeling both the sets of statements, and the associations between said state
 To define the exact associations between graphs, we make use of an anchor triple that links both graphs in the form of
 `_:sourceGraph ca:aboutGraph _:targetGraph`.
 
-
-
 ### Model conversion
 When we state that we are converting metadata annotation models into the context association model, 
 we define this at a syntactic level, where both a conversion and de-conversion can take place
@@ -243,6 +241,10 @@ the relevant algorithms are evaluated over the relevant target parts of the data
 
 ## Demonstration
 
+To demonstrate the need for a uniform context storage, exchange and retrieval mechanism,
+we take a use-case of a research output of a researcher associated both with a university
+and a company. The metadata consists of an ro-crate defining the research output, dataset, and author information,
+a nanopublication of the 
 
 ### RO-Crate
 RO-Crates are a well known standard for the exchange of composite research material in scientific ecosystems.
@@ -309,7 +311,6 @@ Converting a W3C Verifiable Credential or Verifiable Presentation to the context
 
 
 ### ODRL Policy
-
 
 merge all outputs in a triplestore
 one query to show 'what types of metadata are asociated with my target data'
@@ -391,6 +392,10 @@ TODO include table that gives overview of (✅, ❓, or ❌)
 - Context Associations
 
 for requirements
+
+- interoperable 
+- annotation level
+- 
 
 - interoperable (✅, ❓= needs protocol-specific queries, ❌ = RDF/SPARQL needs extensions)
 - RDF support (✅, ❓= only one triple/only triples associated to one subject/only triples/only triples and quads/...)
