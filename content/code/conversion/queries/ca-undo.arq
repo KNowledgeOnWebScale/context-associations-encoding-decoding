@@ -1,0 +1,40 @@
+PREFIX ca:    <https://w3id.org/context-associations#>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+CONSTRUCT {
+  ?s ?p ?o .
+
+  GRAPH ?g2Out {
+    ?s2 ?p2 ?o2 .
+  }
+}
+WHERE {
+  OPTIONAL {
+    GRAPH ?g {
+      ?g a ca:AssertedGraph .
+      ?s ?p ?o .
+      FILTER(!( ?s = ?g && ?p = rdf:type && ?o = ca:AssertedGraph ))
+      FILTER(!( ?s = ?g && ?p = ca:aboutGraph ))
+    }
+  }
+
+  OPTIONAL {
+    GRAPH ?g2 {
+      ?s2 ?p2 ?o2 .
+      FILTER(!( ?s2 = ?g2 && ?p2 = ca:aboutGraph ))
+      FILTER(!( ?s2 = ?g2 && ?p2 = ca:graphName ))   # optional: don't copy the renaming triple itself
+    }
+
+    # Only enforce inequality if ?g is bound
+    FILTER(!BOUND(?g) || ?g2 != ?g)
+
+    MINUS { GRAPH ?g2 { ?g2 a ca:AssertedGraph . } }
+
+    # If present, use ca:graphName value as the output graph name
+    OPTIONAL {
+      GRAPH ?g2 { ?g2 ca:graphName ?name . }
+      FILTER(isIRI(?name) || isBlank(?name)) # valid graph names
+    }
+    BIND(COALESCE(?name, ?g2) AS ?g2Out)
+  }
+}

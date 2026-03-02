@@ -1,0 +1,32 @@
+PREFIX ca:   <https://w3id.org/context-associations#>
+PREFIX dct:  <http://purl.org/dc/terms/>
+PREFIX ex:   <http://example.org/>
+PREFIX np:   <http://www.nanopub.org/nschema#>
+PREFIX pav:  <http://purl.org/pav/>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX this: <http://example.org/nanopub/np1#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+
+this:PubInfo {
+    this:np1  dct:created  "2026-02-19T10:31:00Z"^^xsd:dateTime;
+            dct:license    <https://creativecommons.org/licenses/by/4.0/>;
+            pav:createdBy  ex:Alice .
+}
+
+this:Assertion {
+    ex:Paris  ex:isCapitalOf  ex:France .
+}
+
+this:Head {
+    this:np1  rdf:type             np:Nanopublication;
+            np:hasAssertion        this:Assertion;
+            np:hasProvenance       this:Provenance;
+            np:hasPublicationInfo  this:PubInfo .
+}
+
+this:Provenance {
+    this:Assertion  prov:generatedAtTime  "2026-02-19T10:30:00Z"^^xsd:dateTime;
+            prov:wasAttributedTo  ex:Alice;
+            prov:wasDerivedFrom   <https://www.wikidata.org/entity/Q90> .
+}

@@ -1,0 +1,94 @@
+PREFIX ca:    <https://w3id.org/context-associations#>
+PREFIX cred:  <https://www.w3.org/2018/credentials#>
+PREFIX sec:   <https://w3id.org/security#>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX schema:<http://schema.org/>
+
+CONSTRUCT {
+
+  # Subject graph
+  GRAPH ?A {
+    ?A a ca:AssertedGraph.
+    ?cs ?pA ?oA .
+    ?b1 ?pA1 ?oA1 .
+    ?b2 ?pA2 ?oA2 .
+  }
+
+  # Credential graph
+  GRAPH ?B {
+    ?B ca:aboutGraph ?A .
+    ?B a ca:AssertedGraph.
+
+    ?vc ?pB ?oB .
+    ?m1 ?pM1 ?oM1 .
+    ?m2 ?pM2 ?oM2 .
+  }
+
+  # Proof graph
+  GRAPH ?C {
+    ?ps ?pp ?po .
+    ?C ca:aboutGraph ?B .
+    ?C ca:aboutGraph ?A .
+  }
+}
+WHERE {
+  
+  ?vc a cred:VerifiableCredential ;
+      cred:credentialSubject ?cs ;
+      sec:proof ?C .
+
+  GRAPH ?C { ?ps ?pp ?po }
+
+  BIND( IRI(CONCAT("urn:ca:vc:", SHA256(STR(?vc)), ":A")) AS ?A )
+  BIND( IRI(CONCAT("urn:ca:vc:", SHA256(STR(?vc)), ":B")) AS ?B )
+  BIND( IRI(CONCAT("urn:ca:vc:", SHA256(STR(?vc)), ":A_meta")) AS ?A_meta )
+  BIND( IRI(CONCAT("urn:ca:vc:", SHA256(STR(?vc)), ":B_meta")) AS ?B_meta )
+
+  # Extract subject 
+  {
+    ?cs ?pA ?oA .
+    OPTIONAL {
+      ?cs ?pA ?b1 .
+      FILTER(isBlank(?b1))
+      ?b1 ?pA1 ?oA1 .
+      OPTIONAL {
+        ?b1 ?pA1 ?b2 .
+        FILTER(isBlank(?b2))
+        ?b2 ?pA2 ?oA2 .
+      }
+    }
+  }
+
+  # Extract credential 
+  {
+    VALUES ?metaP {
+      rdf:type
+      cred:issuer
+      cred:validFrom
+      cred:validUntil
+      cred:credentialStatus
+      cred:credentialSchema
+      cred:evidence
+      cred:termsOfUse
+      cred:refreshService
+      cred:relatedResource
+      sec:proof
+      schema:name
+      schema:description
+    }
+
+    ?vc ?metaP ?oB .
+    BIND(?metaP AS ?pB)
+
+    OPTIONAL {
+      FILTER(isBlank(?oB))
+      BIND(?oB AS ?m1)
+      ?m1 ?pM1 ?oM1 .
+      OPTIONAL {
+        FILTER(isBlank(?oM1))
+        BIND(?oM1 AS ?m2)
+        ?m2 ?pM2 ?oM2 .
+      }
+    }
+  }
+}

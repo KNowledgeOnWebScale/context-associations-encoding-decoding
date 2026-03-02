@@ -1,0 +1,54 @@
+PREFIX ca: <https://w3id.org/context-associations#>
+PREFIX np: <http://www.nanopub.org/nschema#>
+
+CONSTRUCT {
+  
+  GRAPH ?hG {
+    ?hG ca:aboutGraph ?iG, ?pG, ?aG.
+    ?hG ca:graphName ?head.
+    ?hs ?hp ?ho.
+  }
+
+  GRAPH ?iG {
+    ?iG ca:aboutGraph ?aG.
+    ?iG ca:graphName ?info.
+    ?is ?ip ?io.
+  }
+
+  GRAPH ?pG {
+    ?pG ca:aboutGraph ?aG.
+    ?pG ca:graphName ?provenance.
+    ?ps ?pp ?po.
+  }
+
+  GRAPH ?aG {
+    ?aG ca:graphName ?assertion.
+    ?as ?ap ?ao.
+  }
+}
+WHERE {
+  GRAPH ?head {
+    ?N a np:Nanopublication ;
+        np:hasAssertion ?assertion ;
+        np:hasProvenance ?provenance ;
+        np:hasPublicationInfo ?info .
+    ?hs ?hp ?ho.
+  }
+
+  GRAPH ?info {
+    ?is ?ip ?io.
+  }
+
+  GRAPH ?provenance {
+    ?ps ?pp ?po.
+  }
+
+  GRAPH ?assertion {
+    ?as ?ap ?ao.
+  }
+
+  BIND( IRI(CONCAT("urn:ca:", SHA256(CONCAT(STR(?N),"|head")))) AS ?hG )
+  BIND( IRI(CONCAT("urn:ca:", SHA256(CONCAT(STR(?N),"|provenance")))) AS ?pG )
+  BIND( IRI(CONCAT("urn:ca:", SHA256(CONCAT(STR(?N),"|info")))) AS ?iG )
+  BIND( IRI(CONCAT("urn:ca:", SHA256(CONCAT(STR(?N),"|assertion")))) AS ?aG )
+}
