@@ -1,17 +1,24 @@
 ## Introduction
 
-Data quality _, usability, trustworthiness_{:.propose} is asserted through contextual metadata annotations.
-For example, in the World Wide Web Consortium's Data Quality Vocabulary (DQV) [citeneeded],
-quality is represented as subject-bound annotations of type `dqv:QualityAnnotation` or `dqv:QualityMeasurement`
-that directly link contextual (data quality) metadata to target datasets or distributions via the prediate.
-Within this scope, the dataset is described as a DCAT dataset,
-so when integrating both the contextual metadata as the target data in a triplestore,
-it is hard to distinguish metadata from the target data
-(especially when, e.g., the quality measurements themselves also haven contextual metadata annotations).
+{:.comment data-author="RubenD,BenDM"}
+TODO: only talk about RDF Knowledge graphs.
+TODO: consistent terminology: you have annotation systems and annotation methods: ways to associate metadata with data. So annotation === association of metadata
 
-We see that the association between contextual information and target data
+{:.comment data-author="BenDM"}
+I'm going to remove the 'contextual' from 'contextual metadata': metadata _is_ contextual, that's the point, no need to differentiate with other kinds of metadata.
+
+Data quality _, usability, trustworthiness_{:.propose} is typically asserted through annotation:
+associating metadata with
+<!-- BDM: I think usability and trustworthiness are too dense terms to use in the first sentence. I'd rather later on state something like 'data quality has many different facets, eg usability and trustworthiness as well' -->
+a target set of RDF statements.
+For example, in the World Wide Web Consortium's Data Quality Vocabulary (DQV) [](cite:cites w3c-dqv-20161215),
+quality is represented as subject-bound associations of type `dqv:QualityAnnotation` or `dqv:QualityMeasurement`
+that directly link contextual (data quality) metadata to target datasets or distributions---represented through DCAT [citeneeded]---via the predicates `oa:hasTarget` (from the Web Annotation Ontology) or `dqv:computedOn`, respectively.
+
+We found that the association method between the metadata and the target statements
 often depends on application-specific specifications and protocol definitions,
-as we see in mature annotation systems such as DQV [](cite:cites w3c-dqv-20161215), nanopublications [^nanopublications], 
+as we see in mature annotation systems
+such as DQV, nanopublications [^nanopublications], 
 RO-Crates [^rocrates], and W3C Verifiable Credentials (VCs) [](cite:cites w3c-vc-data-model-2-20250515).
 
 [^nanopublications]: Nanopublication Guidelines: https://nanopub.net/guidelines/working_draft/
@@ -19,7 +26,7 @@ RO-Crates [^rocrates], and W3C Verifiable Credentials (VCs) [](cite:cites w3c-vc
 
 In DQV, contextual information is associated through specific triples typed 
 as class `dqv:QualityAnnotation` or `dqv:QualityMeasurement` with the relations 
-`oa:hasTarget` (reusing the Web Annotation association model) or 
+`oa:hasTarget` (reusing the Web Annotation way of association) or 
 `dqv:computedOn` to the target dataset or distribution, respectively [citeneeded].
 In the Nanopublication specification, contextual information is associated
 through explicit graph structuring: nanopublication is composed of four named 
@@ -33,18 +40,22 @@ Through JSON-LD expansion and with accompanying W3C CCG Note “RDF Dataset Cano
 _Finally, the Open Digital Rights Language (ODRL) specification defines the resource to which the policy is associated either through a `odrl:hasPolicy` predicate, defined over the resource, or inversely the resource can be linked from the policy using the `odrl:target` property. This policy target is defined in the specification as a resource or a collection of resources that are the subject of a Rule._{:.propose}
 <!-- Data Cube Vocabulary? https://www.w3.org/TR/vocab-data-cube/ -->
 
-As can be seen, these association methods are not aligned and not always explicit at the data level.
-When, e.g., asserting data quality, this mismatch in association methods across applications
-limits uniform storage, exchange, and discovery of metadata linked to a target set of statements.
+As can be seen, these association methods are not aligned and not always explicitly described at the data level.
+When, e.g., asserting data quality,
+this mismatch in association methods across applications
+limits uniform storage, exchange, and discovery of metadata associated to a target set of statements.
+For example, when integrating both the metadata as the target data in a triplestore,
+it is hard to distinguish metadata from the target data
+(especially when, e.g., the quality measurements themselves also have associated metadata).
 
 In this paper, we present Context Associations:
 an approach and associated specification and tooling
 to uniformly model and query
-which metadata is associated with which sets of statements in an RDF dataset.
+which metadata is associated with which statements in an RDF Knowledge Graph.
 Context Associations is available at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification).
 
-To achieve a uniform queryable metadata association method,
-i.e., merging contextual metadata annotations and their target data from multiple applications into a single queryable triplestore,
+To achieve a uniform queryable annotation method,
+i.e., merging contextual metadata and their target statements from multiple applications into a single queryable triplestore,
 we put forward the following target requirements:
 
 <!-- Requirements from where? -->
@@ -62,9 +73,9 @@ we put forward the following target requirements:
 
 - REQ1: the solution is **interoperable** and implement-independent: no extensions to RDF or SPARQL are needed and any existing triplestore can be used.
 - REQ2: target data can be **any arbitrary set of statements**: target data is not bound to a single specific subject or graph, and can have any existing RDF 1.1 (and upcoming RDF 1.2) statements, i.e., target data can contain any combination of triples, graphs, and triple terms.
-- REQ3: contextual metadata annotations are **explicit**: the annotations and target data are both available in the triplestore.
-- REQ4: contextual metadata annotations are **immutable**: there cannot be collisions or other side-effects from merging annotations from multiple applications.
-- REQ5: contextual metadata annotations can be **recursive**: annotations themselves can be annotated. As a result, also contextual metadata annotations can be any arbitrary set of statements (see REQ2).
+- REQ3: annotations are **explicit**: the target statements and associated metadata are both available in the triplestore.
+- REQ4: annotations are **immutable**: there cannot be collisions or other side-effects from merging metadata from multiple applications.
+- REQ5: annotations can be **recursive**: metadata can be associated to metadata. As a result, also metadata can be any arbitrary set of statements (see REQ2).
 
 ## SoTA
 
@@ -136,7 +147,7 @@ since the creation of the trusty URI. Mechanisms like memento can then be added 
 versions to find an exact match. [citeneeded]
 
 <!-- todo: complement with current association models within the protocol: subject-based referencing, graph-based referencing, out-of-band referencing. -->
-To define a specification that can model the association of context in a generic manner, we must be able to 
+To define a specification to associate metadata in a generic manner, we must
 support both the encoding and decoding of the above defined approaches into a single representative data model.
 This requires subject-, predicate- and object-based references, out-of-band references, single triple references
 and graph references.
