@@ -1,4 +1,4 @@
-## Introduction
+## Introduction {#sec-intro}
 
 {:.comment data-author="BenDM"}
 Definitions:
@@ -77,26 +77,36 @@ we put forward the following target requirements:
 - REQ4: annotations are **immutable**: there cannot be collisions or other side-effects from merging contextual information from multiple applications.
 - REQ5: annotations can be **recursive**: contextual information can itself have associated contextual information. As a result, also contextual information can be any arbitrary set of statements and graphs (see REQ2).
 
-After discussing related work in [+++],
-we give an overview of existing RDF annotation models in [+++].
-We then introduce Context Assocations in [+++],
-demonstrate in [+++],
-discuss in [+++], and
-conclude in [+++].
+After discussing existing annotation models and methods in [Section 2](#sec-sota),
+we introduce Context Associations in [Section 3](#sec-context-associations),
+demonstrate in [Section 4](#sec-demonstration) and [Section 5](#sec-sparql-evaluation),
+discuss in [Section 6](#sec-comparison), and
+conclude in [Section 7](#sec-conclusion).
 
-## SoTA
+## SoTA {#sec-sota}
 
-<!-- todo: URI based annotation -->
-As the name suggests, the Resource Description Framework lends itself well to the description of Web resources. 
-Most of the RDF data models that annotate resources, make use of the capability of RDF to reference resources
-using their identifier, most often in the form of a Web URI, to define information about this referenced resource.
-Vocabularies such as the Data Catalog Vocabulary (DCAT) [citeneeded], define the recommendation that these 
-references should provide access to these resources using Web-friendly methods for data retrieval.
-<!-- todo: URI based annotation -->
+<!-- BDM: I joined sota and methods. That's all related work to me, and there was _a lot_ of redundancy. -->
+
+This section groups the existing landscape into annotation models, annotation methods,
+and annotation-related extensions to RDF/SPARQL.
+
+### Annotation models
+
+<!-- metadata representation models - part of RDF -->
+As the name suggests, the Resource Description Framework lends itself well to the description of Web resources:
+RDF is inherently aimed at the annotation of information using (Web) URI references
+as the abstraction layer for a target concept of the annotation.
+These target URIs can be
+Web resources that can be dereferenced from that target URI---following recommendations of vocabularies such as the Data Catalog Vocabulary (DCAT) [citeneeded]---
+or internal entities to the RDF knowledge graph.
+<!-- scope this work to 'inline' annotation -->
+Within the scope of this paper and aligned with related work [](cite:cites frey2019evaluation),
+we will cover annotation models that
+describe assocating contextual information _within the confines of an RDF Dataset_, i.e., assume that Web dereferencing is no longer needed.
 
 The work of Müller et al. [](cite:cites frey2019evaluation) gives an overview
-of annotation models that are part of the RDF model, namely,
-RDF reification, singleton properties, and named graphs.
+of annotation models that are part of the RDF model,
+namely _reification_, _singleton properties_, and _named graphs_.
 They conclude that while reification offers fine-grained statement-level annotation,
 it incurs significant verbosity and complexity, whereas
 named graphs provide a more practical and widely supported mechanism
@@ -105,92 +115,107 @@ Overall, they argue that no single approach is universally optimal, and
 that the choice of representation depends on the required granularity of annotation and
 the intended processing environment.
 
-<!-- todo: metadata representation models - part of RDF -->
+#### Native RDF Annotation
 
-<!-- todo: reification methods are semantically difficult to process -->
-These annotation models, as defined in the work of Müller et al. [](cite:cites frey2019evaluation)
-define an internal strategy to annotating information defined within the confines of an RDF Dataset.
-Where their definition has been included since the standardization work done for RDF 1.0 [citeneeded],
-and their vocabulary was included in the accompanying RDF-Schema specification [citeneeded], 
-their semantic definition in the specification defining the RDF 1.0 Semantics defines that 
-neither the statement implies its reification graph, nor the inverse.
-This leads to difficulties for the semantic interpretation of referenced content, 
-both in a requirement for syntactic conversion, and semantic interpretation.
+<!-- metadata representation models - part of RDF -->
+Native RDF annotation makes  use of RDF's capability
+to reference target resources using a target URI.
+<!-- TODO: improve, basically I want to introduce subject-bound annotations -->
+Within native RDF annotation, the boundary between contextual information and target data is fully implicit:
+on data level, it is not possible to differentiate contextual information from target data (i.e., they are both similarly bound to the same subject, predicate, or object).
 
-The inclusion of named graphs in RDF 1.1 tried to resolve some of these issues, 
-including a native model for defining graphs in an RDF dataset, in the form of
-a (name, RDF graph) pair called a named graph. However, similar to reification, 
-the semantic interpretation of the RDF graph, and its link to the name identifier
-was left undefined, making it's use restricted to specification documents defining
-their use at a mostly syntactical level. [citeneeded] 
+#### Reification
+<!-- reification methods are semantically difficult to process -->
+Reification was introduced with version 1.0 of the RDF specification [https://www.w3.org/TR/rdf-mt/#Reif],
+with supporting vocabulary in RDF Schema [https://www.w3.org/2001/sw/RDFCore/TR/WD-rdf-schema-20030117/#ch_reificationvocab],
+as a way to deconstruct triples to a set of triples defining the subject, predicate and object of the reified triple.
+Sharing a subject, this set of reified triples can then be referenced in the RDF graph to associate contextual information.
+However, RDF 1.0 Semantics [citeneeded] state that
+that the reified statement does not entail the reification graph,
+nor vice versa,
+which complicates semantic interpretation and often requires additional conventions during processing.
+
+#### Singleton Properties
+
+Singleton properties are a proposed method in RDF to overload a triple predicate, similar to the working of Labeled Property Graphs [TODO:cite],
+in which the predicate is replaced by an instanced predicate, derived from the original predicate, that can be referenced in other statements to associate contextual information to the original relation.
+<!-- todo: discuss semantics of approach. -->
+
+#### Named Graphs
+
+Named graphs were introduced in the RDF syntax with version 1.1 of the RDF specification [todo:cite]:
+a native model for defining graphs in an RDF dataset, in the form of
+a (name, RDF graph) pair called a named graph.
+However, similar to reification,
+the semantic relation between the name identifier and RDF graph remains under-specified
+and is typically fixed by application-level conventions [citeneeded].
 <!-- todo: cite caroll paper -->
 
+### Triple Terms
+
 <!-- moved this to here for consistency -->
-Since then and with the upcoming standardization work of RDF 1.2,
-triple terms (formerly known as RDF-Star) were introduced to provide annotations to individual triples.
+With the upcoming RDF 1.2 standardization work [citeneeded],
+triple terms (formerly known as quoted triples in RDF-star) provide a compact way to annotate individual triples.
 Triple terms can be understood as addressing the verbosity and usability limitations of reification
-while retaining its expressivity at the individual statement level.
+while preserving statement-level expressivity.
+
+### Annotation methods
+
+In practice, annotation methods instantiate the above models through application-specific specifications.
+DQV, nanopublications,
+RO-Crates, and Verifiable Credentials
+each have introduced distinct annotation methods,
+which were exemplified in [Section 1](#sec-intro).
+<!-- todo: complement with current association models within the protocol: subject-based referencing, graph-based referencing, out-of-band referencing. -->
+
+<!-- todo: Systems like trustyURI > dataset canonicalization (work of Braun? is it? or external reference) -->
+Some annotation methods build on RDF Knowledge Graph canonicalization
+to create a stable identifier to associate contextual information to.
+This provides a **reificiation-like** pattern that is not limited to a single term.
+Some VC suites support signatures through dataset canonicalization [citeneeded], and
+specifications such as trustyURI make use of an RDF Knowledge Graph canonicalization algorithm to generate a hash, and
+append this hash value as the resource extension to produce verifiable identifiers [citeneeded].
+
+Shape expressions such as SHACL [citeneeded] and SHEX [citeneeded] can be used to define a specific selection of target data.
+Specifically, closed shapes in SHACL can be used, with prior work of converting shape expressions to
+SPARQL queries to perform said extraction [citeneeded].
+This way, the shape expression itself becomes a **proxy identifier to the target data**.
+
+Many specifications, such as Nanopublications,
+make use of these **named graphs** to organize their contents and associated context in these graphs.
 
 <!-- todo: Adopted models such as VC, have custom routines for hash calculation -->
-In addition to the native RDF annotation models, specifications such as Verifiable Credentials are based
+<!--
+Verifiable Credentials are based
 on custom processing of the contents for signature generation. In the case of VCs, the "Cryptographic suite" 
 used by the credential defines the necessary transformations, hashing, serialization and verification mechanisms
 that need to be implemented to generate the signed credential or verify the credential signature over its contents.
 [citeneeded]
+-->
+<!-- BDM: I don't see the relevance of this crypto stuff here. we only need to discuss annotation models and methods -->
+Within Verifiable Credentials (VCs) [citeneeded],
+the default graph is the target data,
+and named graphs are used to store the contextual information.
+This hybrid method of representing contextual information
+**across default and named graphs**
+allows to provide a consistent JSON structure while also being interoperable with RDF through JSON-LD.
+However, this reliance on the default graph breaks the association when multiple credentials are merged into one RDF Knowledge Graph.
 
+<!--
+### Annotation-related extensions to RDF/SPARQL
 
-<!-- todo: Systems like trustyURI > dataset canonicalization (work of Braun? is it? or external reference) -->
-In addition to some VC suites that support signatures through RDF dataset canonicalization [citeneeded],
-specifications such as trusty URIs make use of RDF Dataset canonicalization algorithm to generate a hash over
-content served on the Web, and append this hash value as the resource extension. Any processing client that
-understands this concept will then be able to verify if the contents of the referenced resource has changed
-since the creation of the trusty URI. Mechanisms like memento can then be added to refer to previous resource
-versions to find an exact match. [citeneeded]
-
-Solutions such as tSPARQL are left out of scope as these require SPARQL extensions and are thus not interoperable._{:.remove}
+Solutions such as tSPARQL are left out of scope as these require SPARQL extensions and are thus not interoperable.
+-->
 <!-- todo: Maybe we mention this, as well as Apache Jena ARQ, but only lightly --- these extensions help the usability of SPARQL evaluations over graphs -->
 
-<!-- todo: complement with current association models within the protocol: subject-based referencing, graph-based referencing, out-of-band referencing. -->
-To define an annotation specification in a generic manner, we must
-support both the encoding and decoding of the above defined approaches into a single representative data model.
-This requires subject-, predicate- and object-based references, out-of-band references, single triple references
-and graph references.
+To define a generic annotation model,
+we must support encoding and decoding of all these aforementioned methods.
+This includes subject-, predicate-, and object-based references,
+out-of-band references, single triple references,
+graph references,
+and their combinations.
 
-## Method
-
-In this work, we will evaluate the annotation methods available in RDF.
-
-<!-- todo: discuss semantics of approaches. -->
-
-### URI references
-The RDF data modeling approach is inherently aimed at the annotation of information using URI references
-as the abstraction layer for a target concept of the annotation. This can take the form of Web resources, 
-that can be dereferenced from that target URI, or of internal entities to the RDF knowledge graph.
-
-### Reification
-The concept of reification was introduced with version 1.0 of the RDF specification [https://www.w3.org/TR/rdf-mt/#Reif] and RDF Schema vocabulary [https://www.w3.org/2001/sw/RDFCore/TR/WD-rdf-schema-20030117/#ch_reificationvocab], as a way to deconstruct triples to a set of triples defining the subject, predicate and object of the reified triple. Sharing a subject, this set of reified triples can then be referenced in the RDF graph to associate contextual information.
-
-### Singleton property
-Singleton properties are a proposed method in RDF to overload a triple predicate, similar to the working of Labeled Property Graphs [TODO:cite], 
-in which the predicate is replaced by an instanced predicate, derived from the original predicate, that can be referenced in other statements to associate contextual information to the original relation.
-
-### Named graphs
-Named graphs were introduced in the RDF syntax with version 1.1 of the RDF specification [todo:cite].
-Many specifications, such as Nanopublications, 
-make use of these named graphs to organize their contents and associated context in these graphs.
-
-### Hybrid use of named graph and default graph
-Specifications such as W3C Verifiable Credentials [citeneeded], generate associations 
-that annotate the contents of the default graph, making use of named graphs to store the contextual information.
-This allows them to provide a consistent JSON structure, while also being interoperable with RDF through JSON-LD.
-However, this reliance on the default graph breaks the  is lost when merging the credential into RDF Knowledge Graphs.
-
-### Shapes
-Shape expressions such as SHACL [citeneeded] and SHEX [citeneeded] can be used to define a specific selection of data 
-in an RDF dataset. Specifically, closed shapes in SHACL can be used, with prior work of converting shape expressions to
-SPARQL queries to perform said extraction [citeneeded].
-
-## Context Associations
+## Context Associations {#sec-context-associations}
 With Context Associations, our aim is to provide a general approach for modeling associations
 of context to target data in RDF knowledge graphs. The approach must be able to model the different 
 expressions of the aforementioned annotation mechanisms supported by RDF into a single representative data model,
@@ -254,7 +279,7 @@ In case of combined requirements, such as for VCs, where there are a target set 
 the relevant algorithms are evaluated over the relevant target parts of the data.
 
 
-## Demonstration
+## Demonstration {#sec-demonstration}
 
 To demonstrate the need for a uniform context storage, exchange and retrieval mechanism,
 we take a use-case of a research output of a researcher associated both with a university
@@ -335,7 +360,7 @@ We demonstrate that---for each of the aforementioned annotation systems---statem
 Full reconstruction of the original formats from their Context Association representation
 is feasible when application-specific implied modeling information is made explicit.
 
-## SPARQL evaluation
+## SPARQL evaluation {#sec-sparql-evaluation}
 
 Through SPARQL 1.1 evaluation, we face two problems when evaluating context assocations making use of named graphs in RDF Datasets.
 The first problem is that the only way we can support the evaluation of the annotation chains through SPARQL is by making use of the property-paths in SPARQL. These however are not supported over named graphs, only in the default graph or within a single named graph.
@@ -395,7 +420,7 @@ Extraction of the named graphs annotation chains with a single construct query u
 </figure>
 
 
-## Comparison
+## Comparison {#sec-comparison}
 
 TODO include table that gives overview of (✅, ❓, or ❌)
 
@@ -433,7 +458,7 @@ tSPARQL and RO-Crate are taken out of scope as tSPARQL needs custom extensions a
 TODO: explain: annotation as graph, within that graph point to 'target' graph
 for sharing as a package
 
-## Conclusion
+## Conclusion {#sec-conclusion}
 
 Context Associations is an approach and associated specification and tooling
 that allows to more explicitly state how context is associated with target data in RDF Knowledge Graphs, 
