@@ -222,7 +222,7 @@ and their combinations.
 To ensure iteroperability,
 the annotation model must be expressible within the RDF 1.1 specification
 and both target data and associated contextual information must be queryable through SPARQL 1.1.
-In this section, we discuss both the Context Assocations model and how we can losslessly convert between existing annotation methods and the Context Association model.
+In this section, we discuss both the Context Assocations model and how we can losslessly encode and decode between existing annotation methods and the Context Association model.
 
 ### Annotation Model
 
@@ -251,25 +251,24 @@ This also allows for graph chaining, i.e., recursive annotations (**REQ5**).
 
 The specification for Context Associations can be found at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification).
 
-### Model conversion
+### Model encoding/decoding
 
-When we state that we are converting annotation models into the context association model,
-we define this at a syntactic level,
-where both a conversion and de-conversion can take place
-to identically reconstruct the original syntax of the contextual information
-for an exact piece of data targeted in the RDF dataset.
-However, this conversion may break the syntactic constraints
+<!-- BDM: this paragraph reads wrong: you state that the original syntax can be reconstructed, but the encoding may break the syntactic constraints? Did you mean ''the original semantics' can be reconstructed? -->
+We define annotation method encoding to the Context Association model at a syntactic level.
+Encoding and decoding can take place losslessly:
+the original syntax of the contextual information can be reconstructed.
+However, this encoding/decoding may break the syntactic constraints
 of the original annotation models, such as for VCs,
 where the resulting context association model of the signature
 cannot be verified because of a mismatch in the data structure.
 Here, the annotation model should first be reverted
 before evaluating operations with syntactic constraints.
 
-The conversion algorithm takes the following form:
+The encoding algorithm takes the following form:
 
-**For a target RDF predicate term**, we cannot uniformly retain the original predicate in our conversion,
+**For a target RDF predicate term**, we cannot uniformly retain the original predicate in our encoding,
 as named graphs cannot inherently be used to model annotations on triple predicates.
-For the conversion, the following algorithm is used:
+For the encoding, the following algorithm is used:
 
 1. Separate the triple containing the singleton property, as well as the accompanying `rdf:singletonPropertyOf` triple, and embed them in a named graph `D`
 2. Separate all annotation triples for the singleton property, and embed them in `M`
@@ -345,7 +344,7 @@ Extraction of the individual graphs
 ### Nanopublication
 Nanopublications inherently already make use of the named graph paradigm in structuring 
 their associations of information to a target set of statements.
-The conversion of a nanopublication to the context association model, 
+Encoding a nanopublication to the context association model
 only requires the explicit linking of the metadata graphs to the target data graph.
 
 
@@ -379,7 +378,7 @@ where now the verifiable presentation is stored in the default graph.
 <!-- todo: cleanup! -->
 
 As a general rule of thumb,
-the conversion of a W3C VC or VP,
+encoding a W3C VC or VP
 entails the separation of the data contents from the credential or presentation entity,
 <!-- todo: is this separation necessary, if after all we are using named graphs to separate the contents -->
 after which the relevant anchor links are added.
