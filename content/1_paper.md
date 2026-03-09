@@ -1,22 +1,23 @@
 ## Introduction
 
-{:.comment data-author="RubenD,BenDM"}
-TODO: only talk about RDF Knowledge graphs.
-TODO: consistent terminology: you have annotation systems and annotation methods: ways to associate metadata with data. So annotation === association of metadata
-
 {:.comment data-author="BenDM"}
-I'm going to remove the 'contextual' from 'contextual metadata': metadata _is_ contextual, that's the point, no need to differentiate with other kinds of metadata.
+Definitions:
+contextual information === more generic term for metadata. Metadata is a too loaded term (and some see all RDF as "metadata"). In the scope of this paper, contextual information consists of (an arbitrary set of) RDF statements and graphs.
+target data === the data some contextual information is about. In the scope of this paper, target data consists of (an arbitrary set of) RDF statements and graphs.
+RDF Knowledge Graph === (an arbitrary set of) RDF statements and graphs, containing both target data and contextual information. Can be a merge of RDF Knowledge Graphs. Basically, the querying entry point
+annotating === associating contextual information to target data
+annotation model === used model to associate contextual information to target data. e.g. reification, graphs
+annotation method === combination of model + (sometimes implicit) knowledge to associate contextual information to target data (i.e., more specific than model). e.g. VC uses combination of named graphs and default graph through predicate 'credentialSubject'. Idea of CA is that you can create a model that is a superset of existing methods.
+annotation system === implementation of an annotation method.
 
-Data quality _, usability, trustworthiness_{:.propose} is typically asserted through annotation:
-associating metadata with
+Data quality _, usability, trustworthiness_{:.propose} is typically asserted through _annotation_:
+associating _contextual information_ (of data quality) with _target data_.
 <!-- BDM: I think usability and trustworthiness are too dense terms to use in the first sentence. I'd rather later on state something like 'data quality has many different facets, eg usability and trustworthiness as well' -->
-a target set of RDF statements.
-For example, in the World Wide Web Consortium's Data Quality Vocabulary (DQV) [](cite:cites w3c-dqv-20161215),
-quality is represented as subject-bound associations of type `dqv:QualityAnnotation` or `dqv:QualityMeasurement`
-that directly link contextual (data quality) metadata to target datasets or distributions---represented through DCAT [citeneeded]---via the predicates `oa:hasTarget` (from the Web Annotation Ontology) or `dqv:computedOn`, respectively.
-
-We found that the association method between the metadata and the target statements
-often depends on application-specific specifications and protocol definitions,
+Both the contextual information and target data can be a set of RDF statements and graphs.
+<!-- This target data is an _RDF Knowledge Graph_, but also the combination of target data and annotations is an RDF Knowledge Graph. -->
+There are many possible _annotation models_---the RDF model to associate contextual information to target data (e.g., reification, graphs)---and
+even more _annotation methods_---the application-specific instances of an annotation model.
+These annotation methods rely on application-specific specifications and protocol definitions,
 as we see in mature annotation systems
 such as DQV, nanopublications [^nanopublications], 
 RO-Crates [^rocrates], and W3C Verifiable Credentials (VCs) [](cite:cites w3c-vc-data-model-2-20250515).
@@ -24,38 +25,37 @@ RO-Crates [^rocrates], and W3C Verifiable Credentials (VCs) [](cite:cites w3c-vc
 [^nanopublications]: Nanopublication Guidelines: https://nanopub.net/guidelines/working_draft/
 [^rocrates]: RO-Crate Metadata Specification: https://w3id.org/ro/crate/1.2 
 
-In DQV, contextual information is associated through specific triples typed 
-as class `dqv:QualityAnnotation` or `dqv:QualityMeasurement` with the relations 
-`oa:hasTarget` (reusing the Web Annotation way of association) or 
-`dqv:computedOn` to the target dataset or distribution, respectively [citeneeded].
-In the Nanopublication specification, contextual information is associated
-through explicit graph structuring: nanopublication is composed of four named 
-graphs---Head, Assertion, Provenance, and PublicationInfo---and
+For example, the Data Quality Vocabulary (DQV) [](cite:cites w3c-dqv-20161215) uses the subject-bound annotation model,
+where the annotation method relies on DQV-specific relations and classes.
+Data quality is represented as subject-bound associations of type `dqv:QualityAnnotation` or `dqv:QualityMeasurement`
+that directly associate contextual information (of data quality) to target datasets or distributions---represented through DCAT [citeneeded]---via the predicates `oa:hasTarget` (from the Web Annotation Ontology [citeneeded]) or `dqv:computedOn`, respectively.
+In the Nanopublication specification, contextual information is associated through explicit graph structuring:
+a nanopublication is composed of four named graphs---Head, Assertion, Provenance, and PublicationInfo---and
 the Head graph uses predicates such as `np:hasAssertion`, `np:hasProvenance`, and `np:hasPublicationInfo` 
 to relate the nanopublication resource to its constituent graphs [citeneeded].
 In RO-Crate, contextual information is associated implicitly
-through the JSON-LD graph structure of the RO-Crate Metadata Document using existing vocabularies (e.g., Schema.org) where relationships between entities (e.g., dataset → file, file → creator) are encoded as linked properties in the `@graph` [citeneeded].
+through the JSON-LD graph structure of the RO-Crate Metadata Document using existing vocabularies (e.g., Schema.org[^schema]) where relationships between entities (e.g., dataset → file, file → creator) are encoded as linked properties in the `@graph` [citeneeded].
 In the VC Data Model specification, contextual information is associated through an explicit credential structure: a verifiable credential is composed of core properties such as `credentialSubject` to link to the identified subject resource, and `proof` to bind the credential to a cryptographic verification method [citeneeded].
 Through JSON-LD expansion and with accompanying W3C CCG Note “RDF Dataset Canonicalization and Hashing” and related Data Integrity specifications, Verifiable Credentials can be interpreted as RDF datasets for the purpose of canonicalization and cryptographic proof generation [citeneeded].
 _Finally, the Open Digital Rights Language (ODRL) specification defines the resource to which the policy is associated either through a `odrl:hasPolicy` predicate, defined over the resource, or inversely the resource can be linked from the policy using the `odrl:target` property. This policy target is defined in the specification as a resource or a collection of resources that are the subject of a Rule._{:.propose}
 <!-- Data Cube Vocabulary? https://www.w3.org/TR/vocab-data-cube/ -->
 
-As can be seen, these association methods are not aligned and not always explicitly described at the data level.
+As can be seen, these annotation methods are not aligned and not always explicitly described at the data level.
 When, e.g., asserting data quality,
-this mismatch in association methods across applications
-limits uniform storage, exchange, and discovery of metadata associated to a target set of statements.
-For example, when integrating both the metadata as the target data in a triplestore,
-it is hard to distinguish metadata from the target data
-(especially when, e.g., the quality measurements themselves also have associated metadata).
+this mismatch in annotation methods across applications
+limits uniform storage, exchange, and discovery of contextual information associated to a target set of statements.
+For example, when integrating both the contextual information as the target data in a triplestore,
+it is hard to distinguish the contextual information from the target data
+(especially when, e.g., the quality measurements themselves also have associated contextual information).
 
 In this paper, we present Context Associations:
 an approach and associated specification and tooling
 to uniformly model and query
-which metadata is associated with which statements in an RDF Knowledge Graph.
+which contextual information is associated with which statements in an RDF Knowledge Graph.
 Context Associations is available at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification).
 
 To achieve a uniform queryable annotation method,
-i.e., merging contextual metadata and their target statements from multiple applications into a single queryable triplestore,
+i.e., merging contextual information and their target statements from multiple applications into a single queryable triplestore,
 we put forward the following target requirements:
 
 <!-- Requirements from where? -->
@@ -72,17 +72,19 @@ we put forward the following target requirements:
 -->
 
 - REQ1: the solution is **interoperable** and implement-independent: no extensions to RDF or SPARQL are needed and any existing triplestore can be used.
-- REQ2: target data can be **any arbitrary set of statements**: target data is not bound to a single specific subject or graph, and can have any existing RDF 1.1 (and upcoming RDF 1.2) statements, i.e., target data can contain any combination of triples, graphs, and triple terms.
-- REQ3: annotations are **explicit**: the target statements and associated metadata are both available in the triplestore.
-- REQ4: annotations are **immutable**: there cannot be collisions or other side-effects from merging metadata from multiple applications.
-- REQ5: annotations can be **recursive**: metadata can be associated to metadata. As a result, also metadata can be any arbitrary set of statements (see REQ2).
+- REQ2: target data can be **any arbitrary set of statements and graphs**: target data is not bound to a single specific subject or graph, and can have any existing RDF 1.1 (and upcoming RDF 1.2) statements, i.e., target data can contain any combination of triples, graphs, and triple terms.
+- REQ3: annotations are **explicit**: the target statements and associated contextual information are both available in the triplestore.
+- REQ4: annotations are **immutable**: there cannot be collisions or other side-effects from merging contextual information from multiple applications.
+- REQ5: annotations can be **recursive**: contextual information can itself have associated contextual information. As a result, also contextual information can be any arbitrary set of statements and graphs (see REQ2).
+
+After discussing related work in [+++],
+we give an overview of existing RDF annotation models in [+++].
+We then introduce Context Assocations in [+++],
+demonstrate in [+++],
+discuss in [+++], and
+conclude in [+++].
 
 ## SoTA
-
-_Over the years, many data-modeling approaches are introduced for annotating contextual metadata,
-mostly using RDF reification, named graphs, and triple terms.
-Solutions such as tSPARQL are left out of scope as these require SPARQL extensions and are thus not interoperable._{:.remove}
-<!-- todo: Maybe we mention this, as well as Apache Jena ARQ, but only lightly --- these extensions help the usability of SPARQL evaluations over graphs -->
 
 <!-- todo: URI based annotation -->
 As the name suggests, the Resource Description Framework lends itself well to the description of Web resources. 
@@ -93,21 +95,20 @@ references should provide access to these resources using Web-friendly methods f
 <!-- todo: URI based annotation -->
 
 The work of Müller et al. [](cite:cites frey2019evaluation) gives an overview
-of metadata representation models that are part of the RDF model, namely,
+of annotation models that are part of the RDF model, namely,
 RDF reification, singleton properties, and named graphs.
 They conclude that while reification offers fine-grained statement-level annotation,
 it incurs significant verbosity and complexity, whereas
 named graphs provide a more practical and widely supported mechanism
-for grouping statements and attaching contextual metadata at the graph level.
+for grouping statements and attaching contextual information at the graph level.
 Overall, they argue that no single approach is universally optimal, and
 that the choice of representation depends on the required granularity of annotation and
 the intended processing environment.
 
-
 <!-- todo: metadata representation models - part of RDF -->
 
 <!-- todo: reification methods are semantically difficult to process -->
-These metadata representation models, as defined in the work of Müller et al. [](cite:cites frey2019evaluation)
+These annotation models, as defined in the work of Müller et al. [](cite:cites frey2019evaluation)
 define an internal strategy to annotating information defined within the confines of an RDF Dataset.
 Where their definition has been included since the standardization work done for RDF 1.0 [citeneeded],
 and their vocabulary was included in the accompanying RDF-Schema specification [citeneeded], 
@@ -146,15 +147,18 @@ understands this concept will then be able to verify if the contents of the refe
 since the creation of the trusty URI. Mechanisms like memento can then be added to refer to previous resource
 versions to find an exact match. [citeneeded]
 
+Solutions such as tSPARQL are left out of scope as these require SPARQL extensions and are thus not interoperable._{:.remove}
+<!-- todo: Maybe we mention this, as well as Apache Jena ARQ, but only lightly --- these extensions help the usability of SPARQL evaluations over graphs -->
+
 <!-- todo: complement with current association models within the protocol: subject-based referencing, graph-based referencing, out-of-band referencing. -->
-To define a specification to associate metadata in a generic manner, we must
+To define an annotation specification in a generic manner, we must
 support both the encoding and decoding of the above defined approaches into a single representative data model.
 This requires subject-, predicate- and object-based references, out-of-band references, single triple references
 and graph references.
 
 ## Method
 
-In this work, we will evaluate the metadata annotation methods available in RDF.
+In this work, we will evaluate the annotation methods available in RDF.
 
 <!-- todo: discuss semantics of approaches. -->
 
@@ -164,7 +168,7 @@ as the abstraction layer for a target concept of the annotation. This can take t
 that can be dereferenced from that target URI, or of internal entities to the RDF knowledge graph.
 
 ### Reification
-The concept of reification was introduced with version 1.0 of the RDF specification [https://www.w3.org/TR/rdf-mt/#Reif] and RDF Schema vocabulary [https://www.w3.org/2001/sw/RDFCore/TR/WD-rdf-schema-20030117/#ch_reificationvocab], as a way to deconstruct triples to a set of triples defining the subject, predicate and object of the reified triple. Sharing a subject, this set of reified triples can then be referenced by metadata in the RDF graph.
+The concept of reification was introduced with version 1.0 of the RDF specification [https://www.w3.org/TR/rdf-mt/#Reif] and RDF Schema vocabulary [https://www.w3.org/2001/sw/RDFCore/TR/WD-rdf-schema-20030117/#ch_reificationvocab], as a way to deconstruct triples to a set of triples defining the subject, predicate and object of the reified triple. Sharing a subject, this set of reified triples can then be referenced in the RDF graph to associate contextual information.
 
 ### Singleton property
 Singleton properties are a proposed method in RDF to overload a triple predicate, similar to the working of Labeled Property Graphs [TODO:cite], 
@@ -176,8 +180,8 @@ Many specifications, such as Nanopublications,
 make use of these named graphs to organize their contents and associated context in these graphs.
 
 ### Hybrid use of named graph and default graph
-Specifications such as W3C Verifiable Credentials [citeneeded], generate metadata associations 
-that annotate the contents of the default graph, making use of named graphs to store the metadata definitions.
+Specifications such as W3C Verifiable Credentials [citeneeded], generate associations 
+that annotate the contents of the default graph, making use of named graphs to store the contextual information.
 This allows them to provide a consistent JSON structure, while also being interoperable with RDF through JSON-LD.
 However, this reliance on the default graph breaks the  is lost when merging the credential into RDF Knowledge Graphs.
 
@@ -189,8 +193,8 @@ SPARQL queries to perform said extraction [citeneeded].
 ## Context Associations
 With Context Associations, our aim is to provide a general approach for modeling associations
 of context to target data in RDF knowledge graphs. The approach must be able to model the different 
-expressions of the aforementioned metadata annotation mechanisms supported by RDF into a single representative data model,
-that both be expressed within the RDF 1.1 specification, and be queried for data and associated metadata through SPARQL 1.1.
+expressions of the aforementioned annotation mechanisms supported by RDF into a single representative data model,
+that both be expressed within the RDF 1.1 specification, and be queried for data and associated contextual information through SPARQL 1.1.
 
 The specification for Context Associations can be found at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification).
 
@@ -201,11 +205,11 @@ To define the exact associations between graphs, we make use of an anchor triple
 `_:sourceGraph ca:aboutGraph _:targetGraph`.
 
 ### Model conversion
-When we state that we are converting metadata annotation models into the context association model, 
+When we state that we are converting annotation models into the context association model, 
 we define this at a syntactic level, where both a conversion and de-conversion can take place
-to identically reconstruct the original metadata syntax of the metadata descriptions for an exact piece of data targeted in the RDF dataset.
+to identically reconstruct the original syntax of the contextual information for an exact piece of data targeted in the RDF dataset.
 However, this conversion may break the syntactic constraints of the original annotation models, such as for VCs, where the resulting
-context association model of the signature cannot be verified because of a mismatch in the data structure. Here, the metadata model should
+context association model of the signature cannot be verified because of a mismatch in the data structure. Here, the annotation model should
 first be reverted before evaluating operations with syntactic constraints.
 
 The conversion algorithm takes the following form: 
@@ -229,10 +233,10 @@ The resulting context association of a singleton property
 </figcaption>
 </figure>
 
-**For a target RDF subject / object term**, we can structure any relevant metadata about these terms as a graph of information, 
+**For a target RDF subject / object term**, we can structure any relevant annotations about these terms as a graph of information, 
 that is about the entity identifier by the target subject/object terms. 
 Therefor, we can define a named graph 
-we it suffices to separate the inherent `data` triples from the metadata annotation, 
+where it suffices to separate the inherent `data` triples from the annotations, 
 according to the used annotation model.
 <ol>
 <li> metadata description in RDF</li>
@@ -254,7 +258,7 @@ the relevant algorithms are evaluated over the relevant target parts of the data
 
 To demonstrate the need for a uniform context storage, exchange and retrieval mechanism,
 we take a use-case of a research output of a researcher associated both with a university
-and a company. The metadata consists of an ro-crate defining the research output, dataset, and author information,
+and a company. The contextual information consists of an ro-crate defining the research output, dataset, and author information,
 a nanopublication of the 
 
 ### RO-Crate
@@ -298,12 +302,12 @@ Converting a nanopublication to the context association model.
 
 
 ### W3C Verifiable credentials
-The W3C Verifiable Credentials (VC) data model contains its credential contents and metadata in the default graph, 
+The W3C Verifiable Credentials (VC) data model contains its credential contents and annotations in the default graph, 
 except for the credential signature information, which is stored in the "proof graph", which is a named graph linked to the
 credential using the `vc:proof` predicate, when using the `embedded proof` approach, that incorporates the signature information 
 in the RDF body of the credential. Alternative resource-based `wrapping proof` approaches are out of scope here.
 
-Moving towards the W3C Verifiable Presentation (VP) view of a VC, the credential contents and metadata that were stored in the
+Moving towards the W3C Verifiable Presentation (VP) view of a VC, the credential contents and annotations that were stored in the
 default graph, are moved towards a named graph, the "credential graph", where now the verifiable presentation is stored in the default graph.
 
 <!-- todo: cleanup! -->
@@ -324,17 +328,17 @@ Converting a W3C Verifiable Credential or Verifiable Presentation to the context
 ### ODRL Policy
 
 merge all outputs in a triplestore
-one query to show 'what types of metadata are asociated with my target data'
+one query to show 'what types of contextual information are asociated with my target data'
 reverse piece/pieces of code to translate context associations to originals
 
-We demonstrate that---for each of the aforementioned annotation systems---metadata statements can be uniformly associated with target statements and queried across applications.
+We demonstrate that---for each of the aforementioned annotation systems---statements containing contextual information can be uniformly associated with target statements and queried across applications.
 Full reconstruction of the original formats from their Context Association representation
 is feasible when application-specific implied modeling information is made explicit.
 
 ## SPARQL evaluation
 
 Through SPARQL 1.1 evaluation, we face two problems when evaluating context assocations making use of named graphs in RDF Datasets.
-The first problem is that the only way we can support the evaluation of the metadata chains through SPARQL is by making use of the property-paths in SPARQL. These however are not supported over named graphs, only in the default graph or within a single named graph.
+The first problem is that the only way we can support the evaluation of the annotation chains through SPARQL is by making use of the property-paths in SPARQL. These however are not supported over named graphs, only in the default graph or within a single named graph.
 Therefor, we first need to extract the anchor triples into the default graph.
 
 <figure id="sparql-index" class="listing">
@@ -348,7 +352,7 @@ Over this set of anchoring triples, we can now evaluate the chains using the SPA
 <!-- This can either be done by maintaining a separate index as well, or creating it ad-hoc, since we cannot extract the full graphs yet anyways. -->
 And here we encounter the second problem, in the lack of native support for creating named graphs as the output of a SPARQL Construct evaluation.
 The `GRAPH` keyword is only supported in the `WHERE` clause of a SPARQL query, but not in the `CONSTRUCT` clause.
-Because of this, the extraction of all graphs in a metadata chain from an RDF Dataset requires multiple separate iterations in SPARQL 1.1. 
+Because of this, the extraction of all graphs in an annotation chain from an RDF Dataset requires multiple separate iterations in SPARQL 1.1. 
 The first step is the extraction of all named graph identifiers that chain towards a target graph.
 This target named graph can be pointed to either by it's name identifier, or through a triple matching using the `GRAPH` keyword.
 Since the property path operator `*` matches chains from length zero, it will also match the target named graph containing the data.
@@ -374,19 +378,19 @@ Extraction of the individual graphs. Each resulting graph has to be embedded in 
 
 **Solving problems with Apache Jena ARQ**
 
-To solve the problems encountered in the extraction of the metadata chains, especially the lack of support for constructing graphs, which is impossible to work around in the native SPARQL evaluation, we can make use of the ARQ query engine provided by Apache Jena [citeneeded].
+To solve the problems encountered in the extraction of the annotation chains, especially the lack of support for constructing graphs, which is impossible to work around in the native SPARQL evaluation, we can make use of the ARQ query engine provided by Apache Jena [citeneeded].
 This SPARQL processor provides two functions that extend beyond the SPARQL specification, which allow us to perform the extraction in a single iteration.
 
 Firstly, where the extraction of anchor triples can be worked around by storing them in the default graph, 
 with ARQ can work around this problem making use of a provided union graph, under the identifier `urn:x-arq:UnionGraph`. 
 This is a materialized union of the named graphs present in the queried RDF dataset, which allows us to extract the anchor triples from all graphs in one iteration. Secondly, ARQ supports the creation of named graphs in the `CONSTRUCT` clause of a SPARQL query. 
-This enables us to directly re-create the named graphs in the metadata chain, without having to iterate separately over each graph.
+This enables us to directly re-create the named graphs in the annotation chain, without having to iterate separately over each graph.
 
 
 <figure id="arq-code" class="listing">
 ````/code/jena-arq.txt````
 <figcaption markdown="block">
-Extraction of the named graphs metadata chains with a single construct query using Apache Jena ARQ.
+Extraction of the named graphs annotation chains with a single construct query using Apache Jena ARQ.
 </figcaption>
 </figure>
 
@@ -426,7 +430,7 @@ tSPARQL and RO-Crate are taken out of scope as tSPARQL needs custom extensions a
 | Immutable     | ✅ (if using unique ids) | ✅ (if using unique ids) | ❌: default graph collisions             | ✅ (if using unique ids)      | ✅ (if using unique ids)                              | ✅                    |
 | Recursive     | ✅                       | ✅                       | ❌: default graph                        | ✅                            | ✅                                                    | ✅                    |
 
-TODO: explain: metadata as graph, within that graph point to 'target' graph
+TODO: explain: annotation as graph, within that graph point to 'target' graph
 for sharing as a package
 
 ## Conclusion
@@ -435,12 +439,12 @@ Context Associations is an approach and associated specification and tooling
 that allows to more explicitly state how context is associated with target data in RDF Knowledge Graphs, 
 using default RDF 1.1 features.
 Where other systems introduce custom association methods, do not support annotating all types of RDF statements, 
-or introduce the risk of collisions when merging different metadata in a single triplestore,
+or introduce the risk of collisions when merging different annotations in a single triplestore,
 Context Associations can be used to losslessly convert data coming from these other systems into a single queryable annotation model.
 We show how Context Associations allows you to merge all kinds of data in a single RDF store and use a single query 
-to discover which types of metadata are associated with which target data, across all original systems.
+to discover which types of contextual information are associated with which target data, across all original systems.
 
 By providing a uniform representation of context statements associated with target RDF statements,
-we enable discovery, exchange, storage, and processing of heterogenous contextual metadata annotations.
+we enable discovery, exchange, storage, and processing of heterogenous annotations.
 
 
