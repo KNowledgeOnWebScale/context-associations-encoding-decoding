@@ -222,8 +222,9 @@ and their combinations.
 To ensure iteroperability,
 the annotation model must be expressible within the RDF 1.1 specification
 and both target data and associated contextual information must be queryable through SPARQL 1.1.
+In this section, we discuss both the Context Assocations model and how we can losslessly convert between existing annotation methods and the Context Association model.
 
-### Data Model
+### Annotation Model
 
 Within Context Associations,
 associations are modeled through graph linking.
