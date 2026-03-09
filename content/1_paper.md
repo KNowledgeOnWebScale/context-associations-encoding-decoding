@@ -2,7 +2,7 @@
 
 {:.comment data-author="BenDM"}
 Definitions:
-contextual information === more generic term for metadata. Metadata is a too loaded term (and some see all RDF as "metadata"). In the scope of this paper, contextual information consists of (an arbitrary set of) RDF statements and graphs.
+contextual information === more general term for metadata. Metadata is a too loaded term (and some see all RDF as "metadata"). In the scope of this paper, contextual information consists of (an arbitrary set of) RDF statements and graphs.
 target data === the data some contextual information is about. In the scope of this paper, target data consists of (an arbitrary set of) RDF statements and graphs.
 RDF Knowledge Graph === (an arbitrary set of) RDF statements and graphs, containing both target data and contextual information. Can be a merge of RDF Knowledge Graphs. Basically, the querying entry point
 annotating === associating contextual information to target data
@@ -209,7 +209,7 @@ Solutions such as tSPARQL are left out of scope as these require SPARQL extensio
 <!-- todo: Apache Jena ARQ helps the usability of SPARQL evaluations over graphs -->
 <!-- BDM: I'd introduce ARQ when you need it, I have the feeling it's more an implementation detail than a sota -->
 
-To define a generic annotation model,
+To define a general annotation model,
 we must support encoding and decoding of all these aforementioned methods.
 This includes subject-, predicate-, and object-based references,
 out-of-band references, single triple references,
@@ -217,31 +217,44 @@ graph references,
 and their combinations.
 
 ## Context Associations {#sec-context-associations}
+
 With Context Associations, our aim is to provide a general approach for modeling associations
-of context to target data in RDF knowledge graphs. The approach must be able to model the different 
-expressions of the aforementioned annotation mechanisms supported by RDF into a single representative data model,
-that both be expressed within the RDF 1.1 specification, and be queried for data and associated contextual information through SPARQL 1.1.
+of context to target data in RDF knowledge graphs.
+The approach must be able to model the different expressions
+of the aforementioned annotation mechanisms supported by RDF
+into a single representative data model,
+that can both be expressed within the RDF 1.1 specification
+and be queried for data and associated contextual information through SPARQL 1.1.
 
 The specification for Context Associations can be found at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification).
 
 ### Data Model
-To model generic associations between sets of statements in RDF Datasets, named graphs provide the most straightforward approach
-to modeling both the sets of statements, and the associations between said statement sets through the linking of these named graphs.
-To define the exact associations between graphs, we make use of an anchor triple that links both graphs in the form of
+To model general associations between sets of statements in RDF Datasets,
+named graphs provide the most straightforward approach
+to modeling both the sets of statements,
+and the associations between said statement sets
+through the linking of these named graphs.
+To define the exact associations between graphs,
+we make use of an anchor triple that links both graphs in the form of
 `_:sourceGraph ca:aboutGraph _:targetGraph`.
 
 ### Model conversion
 When we state that we are converting annotation models into the context association model, 
-we define this at a syntactic level, where both a conversion and de-conversion can take place
-to identically reconstruct the original syntax of the contextual information for an exact piece of data targeted in the RDF dataset.
-However, this conversion may break the syntactic constraints of the original annotation models, such as for VCs, where the resulting
-context association model of the signature cannot be verified because of a mismatch in the data structure. Here, the annotation model should
-first be reverted before evaluating operations with syntactic constraints.
+we define this at a syntactic level,
+where both a conversion and de-conversion can take place
+to identically reconstruct the original syntax of the contextual information
+for an exact piece of data targeted in the RDF dataset.
+However, this conversion may break the syntactic constraints
+of the original annotation models, such as for VCs,
+where the resulting context association model of the signature
+cannot be verified because of a mismatch in the data structure.
+Here, the annotation model should first be reverted
+before evaluating operations with syntactic constraints.
 
 The conversion algorithm takes the following form: 
 
 **For a target RDF predicate term**, we cannot uniformly retain the original predicate in our conversion, 
-as named graphs cannot inherently be used to model annotations on triple predicates. 
+as named graphs cannot inherently be used to model annotations on triple predicates.
 For the conversion, the following algorithm is used:
 
 <ol>
@@ -259,10 +272,11 @@ The resulting context association of a singleton property
 </figcaption>
 </figure>
 
-**For a target RDF subject / object term**, we can structure any relevant annotations about these terms as a graph of information, 
-that is about the entity identifier by the target subject/object terms. 
-Therefor, we can define a named graph 
-where it suffices to separate the inherent `data` triples from the annotations, 
+**For a target RDF subject / object term**, we can structure any relevant annotations
+about these terms as a graph of information,
+that is about the entity identifier by the target subject/object terms.
+Therefor, we can define a named graph
+where it suffices to separate the inherent `data` triples from the annotations,
 according to the used annotation model.
 <ol>
 <li> metadata description in RDF</li>
@@ -276,7 +290,8 @@ according to the used annotation model.
 
 
 
-In case of combined requirements, such as for VCs, where there are a target set of triples, as well as named graphs, 
+In case of combined requirements, such as for VCs,
+where there are a target set of triples, as well as named graphs,
 the relevant algorithms are evaluated over the relevant target parts of the data.
 
 
@@ -284,15 +299,23 @@ the relevant algorithms are evaluated over the relevant target parts of the data
 
 To demonstrate the need for a uniform context storage, exchange and retrieval mechanism,
 we take a use-case of a research output of a researcher associated both with a university
-and a company. The contextual information consists of an ro-crate defining the research output, dataset, and author information,
+and a company.
+The contextual information consists of an ro-crate
+defining the research output, dataset, and author information,
 a nanopublication of the 
 
 ### RO-Crate
 RO-Crates are a well known standard for the exchange of composite research material in scientific ecosystems.
-The crate consists of a metadata document, stored in the root directory, that defines the structure of the RO-crate,
-linking the relevant resources of the create, through either local file references, or URI references to external resources.
+The crate consists of a metadata document,
+stored in the root directory,
+that defines the structure of the RO-crate,
+linking the relevant resources of the create,
+through either local file references,
+or URI references to external resources.
 
-Converting this to an RDF-dataset, the metadata document inherently can be loaded into an RDF dataset, through its JSON-LD context.
+Converting this to an RDF-dataset,
+the metadata document inherently can be loaded into an RDF dataset
+through its JSON-LD context.
 
 <!-- todo: get an idea as to how we associate metadata between external resources, e.g. `metadata.json definesInformationOver data.json`. -->
 
@@ -329,16 +352,23 @@ Converting a nanopublication to the context association model.
 
 ### W3C Verifiable credentials
 The W3C Verifiable Credentials (VC) data model contains its credential contents and annotations in the default graph, 
-except for the credential signature information, which is stored in the "proof graph", which is a named graph linked to the
-credential using the `vc:proof` predicate, when using the `embedded proof` approach, that incorporates the signature information 
-in the RDF body of the credential. Alternative resource-based `wrapping proof` approaches are out of scope here.
+except for the credential signature information,
+which is stored in the "proof graph",
+which is a named graph linked to the credential using the `vc:proof` predicate,
+when using the `embedded proof` approach,
+that incorporates the signature information in the RDF body of the credential.
+Alternative resource-based `wrapping proof` approaches are out of scope here.
 
-Moving towards the W3C Verifiable Presentation (VP) view of a VC, the credential contents and annotations that were stored in the
-default graph, are moved towards a named graph, the "credential graph", where now the verifiable presentation is stored in the default graph.
+Moving towards the W3C Verifiable Presentation (VP) view of a VC,
+the credential contents and annotations that were stored in the default graph,
+are moved towards a named graph, the "credential graph",
+where now the verifiable presentation is stored in the default graph.
 
 <!-- todo: cleanup! -->
 
-As a general rule of thumb, the conversion of a W3C VC or VP, entails the separation of the data contents from the credential or presentation entity, 
+As a general rule of thumb,
+the conversion of a W3C VC or VP,
+entails the separation of the data contents from the credential or presentation entity,
 <!-- todo: is this separation necessary, if after all we are using named graphs to separate the contents -->
 after which the relevant anchor links are added.
  
@@ -357,14 +387,18 @@ merge all outputs in a triplestore
 one query to show 'what types of contextual information are asociated with my target data'
 reverse piece/pieces of code to translate context associations to originals
 
-We demonstrate that---for each of the aforementioned annotation systems---statements containing contextual information can be uniformly associated with target statements and queried across applications.
+We demonstrate that---for each of the aforementioned annotation systems---statements containing contextual information
+can be uniformly associated with target statements and queried across applications.
 Full reconstruction of the original formats from their Context Association representation
 is feasible when application-specific implied modeling information is made explicit.
 
 ## SPARQL evaluation {#sec-sparql-evaluation}
 
 Through SPARQL 1.1 evaluation, we face two problems when evaluating context assocations making use of named graphs in RDF Datasets.
-The first problem is that the only way we can support the evaluation of the annotation chains through SPARQL is by making use of the property-paths in SPARQL. These however are not supported over named graphs, only in the default graph or within a single named graph.
+The first problem is that the only way we can support the evaluation of the annotation chains through SPARQL
+is by making use of the property-paths in SPARQL.
+These however are not supported over named graphs,
+only in the default graph or within a single named graph.
 Therefor, we first need to extract the anchor triples into the default graph.
 
 <figure id="sparql-index" class="listing">
@@ -378,7 +412,9 @@ Over this set of anchoring triples, we can now evaluate the chains using the SPA
 <!-- This can either be done by maintaining a separate index as well, or creating it ad-hoc, since we cannot extract the full graphs yet anyways. -->
 And here we encounter the second problem, in the lack of native support for creating named graphs as the output of a SPARQL Construct evaluation.
 The `GRAPH` keyword is only supported in the `WHERE` clause of a SPARQL query, but not in the `CONSTRUCT` clause.
-Because of this, the extraction of all graphs in an annotation chain from an RDF Dataset requires multiple separate iterations in SPARQL 1.1. 
+Because of this,
+the extraction of all graphs in an annotation chain from an RDF Dataset
+requires multiple separate iterations in SPARQL 1.1.
 The first step is the extraction of all named graph identifiers that chain towards a target graph.
 This target named graph can be pointed to either by it's name identifier, or through a triple matching using the `GRAPH` keyword.
 Since the property path operator `*` matches chains from length zero, it will also match the target named graph containing the data.
@@ -390,7 +426,8 @@ Extraction of the metadata named graph chain.
 </figcaption>
 </figure>
 
-Finally, the extraction of the individual graphs from the graph store, requires an iteration over every extracted graph identifier
+Finally, the extraction of the individual graphs from the graph store
+requires an iteration over every extracted graph identifier
 in the previous step, which is then constructed as the output graph.
 
 <figure id="sparql-extract" class="listing">
@@ -404,13 +441,23 @@ Extraction of the individual graphs. Each resulting graph has to be embedded in 
 
 **Solving problems with Apache Jena ARQ**
 
-To solve the problems encountered in the extraction of the annotation chains, especially the lack of support for constructing graphs, which is impossible to work around in the native SPARQL evaluation, we can make use of the ARQ query engine provided by Apache Jena [citeneeded].
-This SPARQL processor provides two functions that extend beyond the SPARQL specification, which allow us to perform the extraction in a single iteration.
+To solve the problems encountered in the extraction of the annotation chains,
+especially the lack of support for constructing graphs,
+which is impossible to work around in the native SPARQL evaluation,
+we can make use of the ARQ query engine provided by Apache Jena [citeneeded].
+This SPARQL processor provides two functions that extend beyond the SPARQL specification,
+which allow us to perform the extraction in a single iteration.
 
-Firstly, where the extraction of anchor triples can be worked around by storing them in the default graph, 
-with ARQ can work around this problem making use of a provided union graph, under the identifier `urn:x-arq:UnionGraph`. 
-This is a materialized union of the named graphs present in the queried RDF dataset, which allows us to extract the anchor triples from all graphs in one iteration. Secondly, ARQ supports the creation of named graphs in the `CONSTRUCT` clause of a SPARQL query. 
-This enables us to directly re-create the named graphs in the annotation chain, without having to iterate separately over each graph.
+Firstly,
+where the extraction of anchor triples can be worked around by storing them in the default graph,
+with ARQ can work around this problem making use of a provided union graph,
+under the identifier `urn:x-arq:UnionGraph`.
+This is a materialized union of the named graphs present in the queried RDF dataset,
+which allows us to extract the anchor triples from all graphs in one iteration.
+Secondly,
+ARQ supports the creation of named graphs in the `CONSTRUCT` clause of a SPARQL query.
+This enables us to directly re-create the named graphs in the annotation chain,
+without having to iterate separately over each graph.
 
 
 <figure id="arq-code" class="listing">
@@ -444,7 +491,9 @@ for requirements
 - immutable (✅, or ❌)
 - recursive (✅, or ❌)
 
-tSPARQL and RO-Crate are taken out of scope as tSPARQL needs custom extensions and RO-Crate's association model is outside the scope of the RDF data.
+tSPARQL and RO-Crate are taken out of scope
+as tSPARQL needs custom extensions
+and RO-Crate's association model is outside the scope of the RDF data.
 
 <!-- me thinks it's gonna look something like this -->
 
@@ -464,10 +513,12 @@ for sharing as a package
 Context Associations is an approach and associated specification and tooling
 that allows to more explicitly state how context is associated with target data in RDF Knowledge Graphs, 
 using default RDF 1.1 features.
-Where other systems introduce custom association methods, do not support annotating all types of RDF statements, 
+Where other systems introduce custom association methods,
+do not support annotating all types of RDF statements, 
 or introduce the risk of collisions when merging different annotations in a single triplestore,
 Context Associations can be used to losslessly convert data coming from these other systems into a single queryable annotation model.
-We show how Context Associations allows you to merge all kinds of data in a single RDF store and use a single query 
+We show how Context Associations allows you to merge all kinds of data in a single RDF store
+and use a single query
 to discover which types of contextual information are associated with which target data, across all original systems.
 
 By providing a uniform representation of context statements associated with target RDF statements,
