@@ -36,9 +36,6 @@ to relate the nanopublication resource to its constituent graphs [citeneeded].
 In RO-Crate, contextual information is associated implicitly
 through the JSON-LD graph structure of the RO-Crate Metadata Document using existing vocabularies (e.g., Schema.org[^schema]) where relationships between entities (e.g., dataset → file, file → creator) are encoded as linked properties in the `@graph` [citeneeded].
 In the VC Data Model specification, contextual information is associated through an explicit credential structure: a verifiable credential is composed of core properties such as `credentialSubject` to link to the identified subject resource, and `proof` to bind the credential to a cryptographic verification method [citeneeded].
-Through JSON-LD expansion and with accompanying W3C CCG Note “RDF Dataset Canonicalization and Hashing” and related Data Integrity specifications, Verifiable Credentials can be interpreted as RDF datasets for the purpose of canonicalization and cryptographic proof generation [citeneeded].
-_Finally, the Open Digital Rights Language (ODRL) specification defines the resource to which the policy is associated either through a `odrl:hasPolicy` predicate, defined over the resource, or inversely the resource can be linked from the policy using the `odrl:target` property. This policy target is defined in the specification as a resource or a collection of resources that are the subject of a Rule._{:.propose}
-<!-- Data Cube Vocabulary? https://www.w3.org/TR/vocab-data-cube/ -->
 
 As can be seen, these annotation methods are not aligned and not always explicitly described at the data level.
 When, e.g., asserting data quality,
@@ -168,13 +165,17 @@ each have introduced distinct annotation methods,
 which were exemplified in [Section 1](#sec-intro).
 <!-- todo: complement with current association models within the protocol: subject-based referencing, graph-based referencing, out-of-band referencing. -->
 
-<!-- todo: Systems like trustyURI > dataset canonicalization (work of Braun? is it? or external reference) -->
+<!-- TODO: native RDF? -->
+<!-- Data Cube Vocabulary? https://www.w3.org/TR/vocab-data-cube/ -->
+
+<!-- Systems like trustyURI > dataset canonicalization (work of Braun? is it? or external reference) -->
 Some annotation methods build on RDF Knowledge Graph canonicalization
 to create a stable identifier to associate contextual information to.
 This provides a **reificiation-like** pattern that is not limited to a single term.
-Some VC suites support signatures through dataset canonicalization [citeneeded], and
-specifications such as trustyURI make use of an RDF Knowledge Graph canonicalization algorithm to generate a hash, and
-append this hash value as the resource extension to produce verifiable identifiers [citeneeded].
+Through JSON-LD expansion and with accompanying W3C CCG Note “RDF Dataset Canonicalization and Hashing” and related Data Integrity specifications, Verifiable Credentials can be interpreted as RDF datasets---with a stable identifier---for the purpose of canonicalization and cryptographic proof generation [citeneeded].
+Specifications such as trustyURI make use of an RDF Knowledge Graph canonicalization algorithm to generate a hash, and
+append this hash value as the resource extension to produce stable (and verifiable) identifiers [citeneeded].
+<!-- BDM: I moved ODRL to future work. -->
 
 Shape expressions such as SHACL [citeneeded] and SHEX [citeneeded] can be used to define a specific selection of target data.
 Specifically, closed shapes in SHACL can be used, with prior work of converting shape expressions to
@@ -184,7 +185,6 @@ This way, the shape expression itself becomes a **proxy identifier to the target
 Many specifications, such as Nanopublications,
 make use of these **named graphs** to organize their contents and associated context in these graphs.
 
-<!-- todo: Adopted models such as VC, have custom routines for hash calculation -->
 <!--
 Verifiable Credentials are based
 on custom processing of the contents for signature generation. In the case of VCs, the "Cryptographic suite" 
@@ -206,7 +206,8 @@ However, this reliance on the default graph breaks the association when multiple
 
 Solutions such as tSPARQL are left out of scope as these require SPARQL extensions and are thus not interoperable.
 -->
-<!-- todo: Maybe we mention this, as well as Apache Jena ARQ, but only lightly --- these extensions help the usability of SPARQL evaluations over graphs -->
+<!-- todo: Apache Jena ARQ helps the usability of SPARQL evaluations over graphs -->
+<!-- BDM: I'd introduce ARQ when you need it, I have the feeling it's more an implementation detail than a sota -->
 
 To define a generic annotation model,
 we must support encoding and decoding of all these aforementioned methods.
@@ -472,4 +473,10 @@ to discover which types of contextual information are associated with which targ
 By providing a uniform representation of context statements associated with target RDF statements,
 we enable discovery, exchange, storage, and processing of heterogenous annotations.
 
-
+<!-- TODO: improve -->
+The Open Digital Rights Language (ODRL) specification defines the resource to which the policy is associated
+either through a `odrl:hasPolicy` predicate, defined over the resource, or
+inversely the resource can be linked from the policy using the `odrl:target` property.
+This policy target is defined in the specification as a resource or a collection of resources that are the subject of a Rule.
+Context Associations can be used as general model to cover this association,
+which we will further investigate in future work.
