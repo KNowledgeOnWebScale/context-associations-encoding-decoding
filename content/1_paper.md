@@ -4,7 +4,7 @@
 Definitions:
 contextual information === more general term for metadata. Metadata is a too loaded term (and some see all RDF as "metadata"). In the scope of this paper, contextual information consists of (an arbitrary set of) RDF statements and graphs.
 target data === the data some contextual information is about. In the scope of this paper, target data consists of (an arbitrary set of) RDF statements and graphs.
-RDF Knowledge Graph === (an arbitrary set of) RDF statements and graphs, containing both target data and contextual information. Can be a merge of RDF Knowledge Graphs. Basically, the querying entry point
+RDF knowledge graph === (an arbitrary set of) RDF statements and graphs, containing both target data and contextual information. Can be a merge of RDF knowledge graphs. Basically, the querying entry point
 annotating === associating contextual information to target data
 annotation model === used model to associate contextual information to target data. e.g. reification, graphs
 annotation method === combination of model + (sometimes implicit) knowledge to associate contextual information to target data (i.e., more specific than model). e.g. VC uses combination of named graphs and default graph through predicate 'credentialSubject'. Idea of CA is that you can create a model that is a superset of existing methods.
@@ -14,7 +14,7 @@ Data quality _, usability, trustworthiness_{:.propose} is typically asserted thr
 associating _contextual information_ (of data quality) with _target data_.
 <!-- BDM: I think usability and trustworthiness are too dense terms to use in the first sentence. I'd rather later on state something like 'data quality has many different facets, eg usability and trustworthiness as well' -->
 Both the contextual information and target data can be a set of RDF statements and graphs.
-<!-- This target data is an _RDF Knowledge Graph_, but also the combination of target data and annotations is an RDF Knowledge Graph. -->
+<!-- This target data is an _RDF knowledge graph_, but also the combination of target data and annotations is an RDF knowledge graph. -->
 There are many possible _annotation models_---the RDF model to associate contextual information to target data (e.g., reification, graphs)---and
 even more _annotation methods_---the application-specific instances of an annotation model.
 These annotation methods rely on application-specific specifications and protocol definitions,
@@ -48,7 +48,7 @@ it is hard to distinguish the contextual information from the target data
 In this paper, we present Context Associations:
 an approach and associated specification and tooling
 to uniformly model and query
-which contextual information is associated with which statements in an RDF Knowledge Graph.
+which contextual information is associated with which statements in an RDF knowledge graph.
 Context Associations is available at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification).
 
 To achieve a uniform queryable annotation method,
@@ -169,11 +169,11 @@ which were exemplified in [Section 1](#sec-intro).
 <!-- Data Cube Vocabulary? https://www.w3.org/TR/vocab-data-cube/ -->
 
 <!-- Systems like trustyURI > dataset canonicalization (work of Braun? is it? or external reference) -->
-Some annotation methods build on RDF Knowledge Graph canonicalization
+Some annotation methods build on RDF knowledge graph canonicalization
 to create a stable identifier to associate contextual information to.
 This provides a **reificiation-like** pattern that is not limited to a single term.
 Through JSON-LD expansion and with accompanying W3C CCG Note “RDF Dataset Canonicalization and Hashing” and related Data Integrity specifications, Verifiable Credentials can be interpreted as RDF datasets---with a stable identifier---for the purpose of canonicalization and cryptographic proof generation [citeneeded].
-Specifications such as trustyURI make use of an RDF Knowledge Graph canonicalization algorithm to generate a hash, and
+Specifications such as trustyURI make use of an RDF knowledge graph canonicalization algorithm to generate a hash, and
 append this hash value as the resource extension to produce stable (and verifiable) identifiers [citeneeded].
 <!-- BDM: I moved ODRL to future work. -->
 
@@ -199,7 +199,7 @@ and named graphs are used to store the contextual information.
 This hybrid method of representing contextual information
 **across default and named graphs**
 allows to provide a consistent JSON structure while also being interoperable with RDF through JSON-LD.
-However, this reliance on the default graph breaks the association when multiple credentials are merged into one RDF Knowledge Graph.
+However, this reliance on the default graph breaks the association when multiple credentials are merged into one RDF knowledge graph.
 
 <!--
 ### Annotation-related extensions to RDF/SPARQL
@@ -209,37 +209,50 @@ Solutions such as tSPARQL are left out of scope as these require SPARQL extensio
 <!-- todo: Apache Jena ARQ helps the usability of SPARQL evaluations over graphs -->
 <!-- BDM: I'd introduce ARQ when you need it, I have the feeling it's more an implementation detail than a sota -->
 
-To define a general annotation model,
-we must support encoding and decoding of all these aforementioned methods.
-This includes subject-, predicate-, and object-based references,
+## Context Associations {#sec-context-associations}
+
+With Context Associations, our aim is to provide a general model
+to associate contextual information to target data in RDF knowledge graphs.
+To define such a general annotation model,
+we must support encoding and decoding of all the aforementioned methods,
+including subject-, predicate-, and object-based references,
 out-of-band references, single triple references,
 graph references,
 and their combinations.
-
-## Context Associations {#sec-context-associations}
-
-With Context Associations, our aim is to provide a general approach for modeling associations
-of context to target data in RDF knowledge graphs.
-The approach must be able to model the different expressions
-of the aforementioned annotation mechanisms supported by RDF
-into a single representative data model,
-that can both be expressed within the RDF 1.1 specification
-and be queried for data and associated contextual information through SPARQL 1.1.
-
-The specification for Context Associations can be found at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification).
+To ensure iteroperability,
+the annotation model must be expressible within the RDF 1.1 specification
+and both target data and associated contextual information must be queryable through SPARQL 1.1.
 
 ### Data Model
-To model general associations between sets of statements in RDF Datasets,
-named graphs provide the most straightforward approach
+
+Within Context Associations,
+associations are modeled through graph linking.
+This allows supporting concrete and closed sets of statements and graphs (**REQ2**).
+Graphs provide the most straightforward approach
 to modeling both the sets of statements,
-and the associations between said statement sets
-through the linking of these named graphs.
+and their associations
+through the explicit linking of these graphs (**REQ3**).
+This is a standard RDF 1.1 pattern (**REQ1**).
+
+To ensure no side-effects from merging target data and contextual information,
+graph merge operations at the RDF level must be prevented.
+For this, we make use of blank node identifiers for the graph name of these named graphs (**REQ4**).
+This ensures the scope of the context statements and its association to a target set of statements is local
+to the scope of the storage, exchange or operation in which they are used.
+If the use of blank nodes is impractical---e.g., due to limitations of
+having to extract specific graphs based on their name value---skolem identifiers can be used
+to ensure unique generation of the graph name at the time of its construction.
+
 To define the exact associations between graphs,
 we make use of an anchor triple that links both graphs in the form of
 `_:sourceGraph ca:aboutGraph _:targetGraph`.
+This also allows for graph chaining, i.e., recursive annotations (**REQ5**).
+
+The specification for Context Associations can be found at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification).
 
 ### Model conversion
-When we state that we are converting annotation models into the context association model, 
+
+When we state that we are converting annotation models into the context association model,
 we define this at a syntactic level,
 where both a conversion and de-conversion can take place
 to identically reconstruct the original syntax of the contextual information
@@ -251,17 +264,15 @@ cannot be verified because of a mismatch in the data structure.
 Here, the annotation model should first be reverted
 before evaluating operations with syntactic constraints.
 
-The conversion algorithm takes the following form: 
+The conversion algorithm takes the following form:
 
-**For a target RDF predicate term**, we cannot uniformly retain the original predicate in our conversion, 
+**For a target RDF predicate term**, we cannot uniformly retain the original predicate in our conversion,
 as named graphs cannot inherently be used to model annotations on triple predicates.
 For the conversion, the following algorithm is used:
 
-<ol>
-<li>Separate the triple containing the singleton property, as well as the accompanying `rdf:singletonPropertyOf` triple, and embed them in a named graph `D`</li>
-<li>Separate all annotation triples for the singleton property, and embed them in `M`</li>
-<li>Add the anchor triple `M` ca:aboutGraph `D` to the named graph `M`</li>
-</ol>
+1. Separate the triple containing the singleton property, as well as the accompanying `rdf:singletonPropertyOf` triple, and embed them in a named graph `D`
+2. Separate all annotation triples for the singleton property, and embed them in `M`
+3. Add the anchor triple `M` ca:aboutGraph `D` to the named graph `M`
 
 This results in the following context association model.
 
@@ -511,7 +522,7 @@ for sharing as a package
 ## Conclusion {#sec-conclusion}
 
 Context Associations is an approach and associated specification and tooling
-that allows to more explicitly state how context is associated with target data in RDF Knowledge Graphs, 
+that allows to more explicitly state how context is associated with target data in RDF knowledge graphs, 
 using default RDF 1.1 features.
 Where other systems introduce custom association methods,
 do not support annotating all types of RDF statements, 
