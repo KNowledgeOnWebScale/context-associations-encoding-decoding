@@ -27,10 +27,10 @@ RO-Crates [^rocrates], and [W3C Verifiable Credentials (VCs)](cite:cites w3c-vc-
 [^nanopublications]: Nanopublication Guidelines: https://nanopub.net/guidelines/working_draft/
 [^rocrates]: RO-Crate Metadata Specification: https://w3id.org/ro/crate/1.2
 
-For example, the [Data Quality Vocabulary (DQV)](cite:cites w3c-dqv-20161215) uses a subject-bound annotation model,
-in which the annotation method relies on DQV-specific relations and classes.
-Data quality is represented through subject-bound associations of type `dqv:QualityAnnotation` or `dqv:QualityMeasurement`
-that directly associate contextual information (about data quality) with target datasets or distributions--represented through DCAT--via the predicates `oa:hasTarget` (from the Web Annotation Ontology[^wao] or `dqv:computedOn`, respectively.
+For example, the Data Quality Vocabulary (DQV) [](cite:cites w3c-dqv-20161215) uses the term-bound annotation model,
+where the annotation method relies on DQV-specific relations and classes.
+Data quality is represented as term-bound associations of subjects of type `dqv:QualityAnnotation` or `dqv:QualityMeasurement`
+that directly associate contextual information (of data quality) to target datasets or distributions---represented through DCAT [citeneeded]---via the predicates `oa:hasTarget` (from the Web Annotation Ontology [citeneeded]) or `dqv:computedOn`, respectively.
 In the Nanopublication specification, contextual information is associated through explicit graph structuring:
 a nanopublication is composed of four named graphs--Head, Assertion, Provenance, and PublicationInfo--and
 the Head graph uses predicates such as `np:hasAssertion`, `np:hasProvenance`, and `np:hasPublicationInfo`
@@ -107,9 +107,9 @@ the intended processing environment.
 <!-- metadata representation models - part of RDF -->
 Native RDF annotation makes  use of RDF’s capability
 to reference target resources using a target URI.
-<!-- TODO: improve, basically I want to introduce subject-bound annotations -->
+<!-- TODO: improve, basically I want to introduce term-bound annotations -->
 Within native RDF annotation, the boundary between contextual information and target data is fully implicit:
-on data level, it is not possible to differentiate contextual information from target data (i.e., they are both similarly bound to the same subject, predicate, or object).
+on data level, it is not possible to differentiate contextual information from target data (i.e., both are similarly bound to the same subject, predicate, or object term).
 
 #### Reification
 
@@ -201,11 +201,11 @@ Solutions such as tSPARQL are left out of scope as these require SPARQL extensio
 
 ## Context Associations {#sec-context-associations}
 
-With Context Associations, our aim is to provide a general model
-to associate contextual information to target data in RDF knowledge graphs.
-To define such a general annotation model,
-we must support encoding and decoding of all the aforementioned methods,
-including subject-, predicate-, and object-based references,
+<!-- With Context Associations, our aim is to provide a general model -->
+<!-- to associate contextual information to target data in RDF knowledge graphs. -->
+To define a general annotation model,
+we must support encoding and decoding of existing annotation methods,
+including term-bound references,
 out-of-band references, single triple references,
 graph references,
 and their combinations.
@@ -243,7 +243,6 @@ The specification for Context Associations can be found at [https://w3id.org/con
 
 ### Model encoding/decoding
 
-<!-- BDM: this paragraph reads wrong: you state that the original syntax can be reconstructed, but the encoding may break the syntactic constraints? Did you mean ''the original semantics' can be reconstructed? -->
 Context Associations explicitly provide the directed association between contextual information and target data.
 Existing annotation methods can be _encoded_ as Context Associations---typically requiring
 customized processing as existing annotation methods may have implicit conventions---and
@@ -258,7 +257,7 @@ Encoding typically follows the following steps:
   - For reification, embed the original triple as target data in a named graph with blanknode label.
   - For a singleton property, separate the triple containing the singleton property and the accompanying `rdf:singletonPropertyOf` triple, and embed them as target data in a named graph with blanknode label.
   - For (default and named) graphs, rename the graph to a named graph with blanknode label and add the original graph name through `ca:graphName`.
-  - For subject/predicate/object-bound linking, put target data in a named graph with blanknode label.
+  - For term-bound linking, put target data in a named graph with blanknode label.
 
 For each annotation method, customized encodings need to be provided.
 These, and a general decoding of Context Associations are validated through a SPARQL CONSTRUCT Queries, are made available at https://github.com/KNowledgeOnWebScale/context-associations-encoding-decoding under the permissive MIT license.
@@ -532,10 +531,10 @@ and RO-Crate's association model is outside the scope of the RDF data. -->
 
 <figure id="table-comparison" class="table" markdown="block">
 
-|               | Reification              | Singleton property       | Default graph and named graph  | Named graphs   | Subject-bound | Context Associations |
+|               | Reification              | Singleton property       | Default graph and named graph  | Named graphs   | Term-bound | Context Associations |
 |---------------|--------------------------|--------------------------|------------------------------------------|-------------------------------|--------------------------------------------------|----------------------|
 | Interoperable | ✅                       | ✅                       | ❓                                       | ❓                            | ❓                                                    | ❓                    |
-| RDF Support   | one triple      | one triple      | triples/<br/>triple terms            | triples/<br/>triple terms | subject-bound triples                          | ✅                    |
+| RDF Support   | one triple      | one triple      | triples/<br/>triple terms            | triples/<br/>triple terms | Term-bound triples                          | ✅                    |
 | Explicit      | ✅                       | ✅                       | ✅                                       | ✅                            | ❓                                                    | ✅                    |
 | Immutable     | ❓ | ❓ | default graph collisions             | ❓      | ❓                              | ✅                    |
 | Recursive     | ✅                       | ✅                       | ❌: default graph                        | ✅                            | ✅                                                    | ✅                    |
