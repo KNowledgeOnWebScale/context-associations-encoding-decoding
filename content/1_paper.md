@@ -21,8 +21,8 @@ There are many possible _annotation models_--i.e., RDF-level models to associate
 even more _annotation methods_---i.e., application-specific instances of an annotation model.
 These annotation methods rely on application-specific specifications and protocol definitions,
 as illustrated by mature annotation systems
-such as DQV, nanopublications [^nanopublications],
-RO-Crates [^rocrates], and [W3C Verifiable Credentials (VCs)](cite:cites w3c-vc-data-model-2-20250515).
+such as DQV, nanopublications[^nanopublications],
+RO-Crates[^rocrates], and [W3C Verifiable Credentials (VCs)](cite:cites w3c-vc-data-model-2-20250515).
 
 [^nanopublications]: Nanopublication Guidelines: [https://nanopub.net/guidelines/working_draft/](https://nanopub.net/guidelines/working_draft/)
 [^rocrates]: RO-Crate Metadata Specification: [https://w3id.org/ro/crate/1.2](https://w3id.org/ro/crate/1.2)
@@ -286,18 +286,17 @@ where there are a target set of triples, as well as named graphs,
 the relevant algorithms are evaluated over the relevant target parts of the data. -->
 
 The original semantics of the contextual information can be reconstructed,
-however, syntactic constraints of the original annotation models
+but the syntactic constraints of the original annotation models
 may require additional processing.
-For example, VCs encode verification signatures:
-this verification signature cannot be verified in the Context Association encoding
-due a mismatch in the data structure (some VC signatures depend on a specific JSON frame),
-and can only be verified after decoding and reframing the data in the correct JSON frame.
+For example, VC signatures
+cannot be verified in the Context Association encoding
+because some signature suites rely on a specific JSON frame.
+They can only be verified after decoding and reformatting the data in the correct structure.
 
-## Demonstration {#sec-demonstration}
+## Use Case Application {#sec-demonstration}
 
 To demonstrate the need for Context Associations,
-we take a use-case of a research output of a researcher associated both with a university
-and a company.
+we take a use-case of a research output of a researcher.
 The contextual information consists of an RO-Crate
 defining the research output, dataset, and author information,
 a nanopublication of the publication,

@@ -1,5 +1,4 @@
 _:data { ex:Alice ex:hasDiploma ex:MasterDegree . }
-
 _:proof {
     _:proof ca:aboutGraph _:data ;
         dct:created "2026-02-19T10:32:00Z"^^xsd:dateTime ;
