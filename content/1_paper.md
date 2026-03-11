@@ -450,6 +450,13 @@ To solve the problems encountered in the extraction of the annotation chains,
 especially the lack of support for constructing graphs,
 which is impossible to work around in the native SPARQL evaluation, -->
 
+<figure id="arq-code" class="listing">
+````/code/jena-arq.txt````
+<figcaption markdown="block">
+Extraction of the named graphs annotation chains with a single construct query using Apache Jena ARQ.
+</figcaption>
+</figure>
+
 However,
 we can make use of the ARQ query engine provided by Apache Jena[^jena].
 This SPARQL processor provides two functions that extend beyond the SPARQL specification,
@@ -474,14 +481,6 @@ ARQ supports the creation of named graphs in the `CONSTRUCT` clause of a SPARQL 
 This enables us to directly re-create the named graphs in the annotation chain,
 without having to iterate separately over each graph.
 -->
-
-
-<figure id="arq-code" class="listing">
-````/code/jena-arq.txt````
-<figcaption markdown="block">
-Extraction of the named graphs annotation chains with a single construct query using Apache Jena ARQ.
-</figcaption>
-</figure>
 
 <!-- 
 ## Comparison {#sec-comparison}
