@@ -1,6 +1,6 @@
 ## Introduction {#sec-intro}
 
-{:.comment data-author="BenDM"}
+<!-- {:.comment data-author="BenDM"}
 Definitions:
 contextual information === more general term for metadata. Metadata is a too loaded term (and some see all RDF as "metadata"). In the scope of this paper, contextual information consists of (an arbitrary set of) RDF statements and graphs.
 target data === the data some contextual information is about. In the scope of this paper, target data consists of (an arbitrary set of) RDF statements and graphs.
@@ -8,7 +8,7 @@ RDF knowledge graph === (an arbitrary set of) RDF statements and graphs, contain
 annotating === associating contextual information to target data
 annotation model === used model to associate contextual information to target data. e.g. reification, graphs
 annotation method === combination of model + (sometimes implicit) knowledge to associate contextual information to target data (i.e., more specific than model). e.g. VC uses combination of named graphs and default graph through predicate 'credentialSubject'. Idea of CA is that you can create a model that is a superset of existing methods.
-annotation system === implementation of an annotation method.
+annotation system === implementation of an annotation method. -->
 
 Data quality _, usability, trustworthiness_{:.propose} is typically asserted through _annotation_:
 associating _contextual information_ (of data quality) with _target data_.
@@ -510,7 +510,7 @@ Extraction of the named graphs annotation chains with a single construct query u
 </figcaption>
 </figure>
 
-
+<!-- 
 ## Comparison {#sec-comparison}
 
 TODO include table that gives overview of (✅, ❓, or ❌)
@@ -536,20 +536,28 @@ for requirements
 
 tSPARQL and RO-Crate are taken out of scope
 as tSPARQL needs custom extensions
-and RO-Crate's association model is outside the scope of the RDF data.
+and RO-Crate's association model is outside the scope of the RDF data. -->
 
 <!-- me thinks it's gonna look something like this -->
 
-|               | Reification              | Singleton property       | Default graph and named graph (e.g. VC)  | Named graphs (e.g. Nanopub)   | Per-subject linking (see dqv and Web Annotation) | Context Associations |
+<figure id="table-comparison" class="table" markdown="block">
+
+|               | Reification              | Singleton property       | Default graph and named graph  | Named graphs   | Subject-bound | Context Associations |
 |---------------|--------------------------|--------------------------|------------------------------------------|-------------------------------|--------------------------------------------------|----------------------|
 | Interoperable | ✅                       | ✅                       | ❓                                       | ❓                            | ❓                                                    | ✅                    |
-| RDF Support   | ❓: only one triple      | ❓: only one triple      | ❓: only triples/triple terms            | ❓: only triples/triple terms | ❓: only triples per subject                          | ✅                    |
-| Explicit      | ✅                       | ✅                       | ✅                                       | ✅                            | ✅                                                    | ✅                    |
-| Immutable     | ✅ (if using unique ids) | ✅ (if using unique ids) | ❌: default graph collisions             | ✅ (if using unique ids)      | ✅ (if using unique ids)                              | ✅                    |
+| RDF Support   | one triple      | one triple      | triples/<br/>triple terms            | triples/<br/>triple terms | subject-bound triples                          | ✅                    |
+| Explicit      | ✅                       | ✅                       | ✅                                       | ✅                            | ❓                                                    | ✅                    |
+| Immutable     | ❓ | ❓ | default graph collisions             | ❓      | ❓                              | ✅                    |
 | Recursive     | ✅                       | ✅                       | ❌: default graph                        | ✅                            | ✅                                                    | ✅                    |
 
-TODO: explain: annotation as graph, within that graph point to 'target' graph
-for sharing as a package
+<figcaption markdown="block">
+
+Comparison of the requirements of existing annotation models and methods with Context Associations.
+At _Interoperable_, ❓ denotes that custom annotation methods are introduced to interpret the annotation model.
+At Immutable, ❓ denotes immutability requires globally unique and non-colliding identifiers.
+
+</figcaption>
+</figure>
 
 ## Conclusion {#sec-conclusion}
 
