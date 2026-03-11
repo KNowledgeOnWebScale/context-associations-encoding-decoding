@@ -154,14 +154,15 @@ Through JSON-LD expansion and with accompanying W3C CCG Note “RDF Dataset Cano
 Specifications such as trustyURI make use of an RDF knowledge graph canonicalization algorithm to generate a hash, and
 append this hash value as the resource extension to produce stable (and verifiable) identifiers [citeneeded].
 <!-- BDM: I moved ODRL to future work. -->
-
-Shape expressions such as SHACL [citeneeded] and SHEX [citeneeded] can be used to define a specific selection of target data.
-Specifically, closed shapes in SHACL can be used, with prior work of converting shape expressions to
-SPARQL queries to perform said extraction [citeneeded].
-This way, the shape expression itself becomes a **proxy identifier to the target data**.
-
 Many specifications, such as Nanopublications,
 make use of these **named graphs** to organize their contents and associated context in these graphs.
+
+<!-- Shape expressions such as SHACL [citeneeded] and SHEX [citeneeded] can be used to define a specific selection of target data.
+Specifically, closed shapes in SHACL can be used, with prior work of converting shape expressions to
+SPARQL queries to perform said extraction [citeneeded].
+This way, the shape expression itself becomes a **proxy identifier to the target data**. -->
+
+
 
 <!--
 Verifiable Credentials are based
