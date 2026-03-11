@@ -322,16 +322,19 @@ and can only be verified after decoding and reframing the data in the correct JS
 
 ## Demonstration {#sec-demonstration}
 
-To demonstrate the need for a uniform context storage, exchange and retrieval mechanism,
+To demonstrate the need for Context Associations,
 we take a use-case of a research output of a researcher associated both with a university
 and a company.
-The contextual information consists of an ro-crate
+The contextual information consists of an RO-Crate
 defining the research output, dataset, and author information,
 a nanopublication of the publication,
 and a verifiable credential that states the diploma of the researcher.
-All 
+All demonstration data is available at https://github.com/KNowledgeOnWebScale/context-associations-encoding-decoding.
 
-### RO-Crate
+Below, we include the relevant encoded Context Associations,
+for the RO-Crate, nanopublication, and verifiable credential.
+
+<!-- ### RO-Crate
 RO-Crates are a well known standard for the exchange of composite research material in scientific ecosystems.
 The crate consists of a metadata document,
 stored in the root directory,
@@ -342,20 +345,20 @@ or URI references to external resources.
 
 Converting this to an RDF-dataset,
 the metadata document inherently can be loaded into an RDF dataset
-through its JSON-LD context.
+through its JSON-LD context. -->
 
 <!-- todo: get an idea as to how we associate metadata between external resources, e.g. `metadata.json definesInformationOver data.json`. -->
 
 
 
 <figure id="ro-crate-code" class="listing">
-````/code/ca_ro-crate.txt````
+````/code/ca_ro-crate_snip.txt````
 <figcaption markdown="block">
-Extraction of the individual graphs
+Relevant RO-Crate Context Associations
 </figcaption>
 </figure>
 
-
+<!-- 
 
 ### Nanopublication
 Nanopublications inherently already make use of the named graph paradigm in structuring 
@@ -367,16 +370,16 @@ only requires the explicit linking of the metadata graphs to the target data gra
 
 
 piece of code to translate an example nanopub to context associations
-  Nanopublication stating that 
+  Nanopublication stating that  -->
 
 <figure id="nanopub-code" class="listing">
-````/code/ca_nanopub.txt````
+````/code/ca_nanopub_snip.txt````
 <figcaption markdown="block">
-Converting a nanopublication to the context association model.
+Relevant nanopublication Context Associations
 </figcaption>
 </figure>
 
-
+<!-- 
 ### W3C Verifiable credentials
 The W3C Verifiable Credentials (VC) data model contains its credential contents and annotations in the default graph, 
 except for the credential signature information,
@@ -391,23 +394,21 @@ the credential contents and annotations that were stored in the default graph,
 are moved towards a named graph, the "credential graph",
 where now the verifiable presentation is stored in the default graph.
 
-<!-- todo: cleanup! -->
-
 As a general rule of thumb,
 encoding a W3C VC or VP
 entails the separation of the data contents from the credential or presentation entity,
-<!-- todo: is this separation necessary, if after all we are using named graphs to separate the contents -->
+<!-- todo: is this separation necessary, if after all we are using named graphs to separate the contents
 after which the relevant anchor links are added.
- 
+  -->
 
 <figure id="vc-code" class="listing">
-````/code/ca_vc.txt````
+````/code/ca_vc_snip.txt````
 <figcaption markdown="block">
-Converting a W3C Verifiable Credential or Verifiable Presentation to the context association model.
+Relevant VC Context Associations
 </figcaption>
 </figure>
 
-
+<!-- 
 ### ODRL Policy
 
 merge all outputs in a triplestore
@@ -417,10 +418,16 @@ reverse piece/pieces of code to translate context associations to originals
 We demonstrate that---for each of the aforementioned annotation systems---statements containing contextual information
 can be uniformly associated with target statements and queried across applications.
 Full reconstruction of the original formats from their Context Association representation
-is feasible when application-specific implied modeling information is made explicit.
+is feasible when application-specific implied modeling information is made explicit. -->
 
-## SPARQL evaluation {#sec-sparql-evaluation}
+This uniform way of associating contextual information with target data allows us to extract all annotations we have about `ex:Alice`.
+Extracting all annotations using standard SPARQ 1.1 requires the following sequence:
 
+1. We extract all annotation chains. As supporting any arbitrary sequence requires property paths which is not supporting for named graphs, we first extract the anchor triples into the default graph and evaluate the chains using SPARQL property paths.
+2. To regenerate the contextual information, we must create named graphs. As named graphs cannot be created in a SPARQL CONSTRUCT query, we instead extract all named graph identifiers that chain towards a target graph through (1)) its name identifier, or (2) using the `GRAPH` keyword.
+3. Going over each extracted graph identifier, we can construct the output graphs.
+
+<!-- 
 Through SPARQL 1.1 evaluation, we face two problems when evaluating context assocations making use of named graphs in RDF Datasets.
 The first problem is that the only way we can support the evaluation of the annotation chains through SPARQL
 is by making use of the property-paths in SPARQL.
@@ -436,7 +443,7 @@ Extraction of the anchor triples into the default graph.
 </figure>
 
 Over this set of anchoring triples, we can now evaluate the chains using the SPARQL property paths.
-<!-- This can either be done by maintaining a separate index as well, or creating it ad-hoc, since we cannot extract the full graphs yet anyways. -->
+<!-- This can either be done by maintaining a separate index as well, or creating it ad-hoc, since we cannot extract the full graphs yet anyways. 
 And here we encounter the second problem, in the lack of native support for creating named graphs as the output of a SPARQL Construct evaluation.
 The `GRAPH` keyword is only supported in the `WHERE` clause of a SPARQL query, but not in the `CONSTRUCT` clause.
 Because of this,
@@ -463,19 +470,27 @@ in the previous step, which is then constructed as the output graph.
 Extraction of the individual graphs. Each resulting graph has to be embedded in a `<graph> { ... }` pattern.
 </figcaption>
 </figure>
+ -->
 
 
-
-**Solving problems with Apache Jena ARQ**
+<!-- **Solving problems with Apache Jena ARQ**
 
 To solve the problems encountered in the extraction of the annotation chains,
 especially the lack of support for constructing graphs,
-which is impossible to work around in the native SPARQL evaluation,
+which is impossible to work around in the native SPARQL evaluation, -->
+
+However,
 we can make use of the ARQ query engine provided by Apache Jena [citeneeded].
 This SPARQL processor provides two functions that extend beyond the SPARQL specification,
-which allow us to perform the extraction in a single iteration.
+which allow us to perform the extraction in a single iteration:
+(1) ARQ provides a union graph under the identifier `urn:x-arq:UnionGraph`---a materialized union of the named graphs present in the queried RDF dataset---which allows us to extract the anchor triples from all graphs in one iteration; and
+(2) ARQ supports the creation of named graphs in the `CONSTRUCT` clause of a SPARQL query, which
+enables us to directly re-create the named graphs in the annotation chain,
+without having to iterate separately over each graph.
+Below, we show the ARQ query that allows us to uniformly gather all contextual information of `ex:Alice` .
 
-Firstly,
+
+<!-- Firstly,
 where the extraction of anchor triples can be worked around by storing them in the default graph,
 with ARQ can work around this problem making use of a provided union graph,
 under the identifier `urn:x-arq:UnionGraph`.
@@ -485,6 +500,7 @@ Secondly,
 ARQ supports the creation of named graphs in the `CONSTRUCT` clause of a SPARQL query.
 This enables us to directly re-create the named graphs in the annotation chain,
 without having to iterate separately over each graph.
+-->
 
 
 <figure id="arq-code" class="listing">

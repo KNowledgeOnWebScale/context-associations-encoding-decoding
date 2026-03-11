@@ -1,0 +1,18 @@
+@prefix ca:   <https://w3id.org/context-associations#> .  
+@prefix ex:   <http://example.org/> .
+@prefix this: <http://example.org/nanopub/np1#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+_:graph1 {
+  ca:graphName "http://example.org/nanopub/np1#" ;
+  ex:comment a ex:Comment ;
+    ex:hasCommentText "My survey showed a SUS score of 3.4" ;
+}
+
+_:graph2 {
+  this:Provenance ca:aboutGraph _:graph1 .
+  this:Assertion
+    prov:wasAttributedTo ex:Alice ;
+    prov:generatedAtTime "2026-02-19T10:30:00Z"^^xsd:dateTime .
+}

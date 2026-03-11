@@ -1,0 +1,19 @@
+@prefix ex:     <http://example.org/> .
+@prefix robase: <https://ro-crate.base/> .
+@prefix schema: <http://schema.org/> .
+
+_:graph1 {
+    _:graph1 rdf:about robase:survey-responses-2019.csv .
+    robase:survey-responses-2019.csv schema:contentSize "26452" ;
+        schema:encodingFormat "text/csv" ;
+        schema:name "Survey responses" ;
+        a schema:MediaObject .
+}
+
+_:graph3 {
+    _:graph3 ca:aboutGraph _:graph1.
+    robase:ro-crate-metadata.json <http://purl.org/dc/terms/conformsTo> <https://w3id.org/ro/crate/1.1> ;
+        schema:about robase: .
+        a schema:CreativeWork ;
+        pav:createdBy ex:Alice .
+}
