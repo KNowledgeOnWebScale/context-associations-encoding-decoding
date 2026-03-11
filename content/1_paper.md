@@ -59,6 +59,7 @@ to uniformly model and query
 which contextual information is associated with which statements in an RDF knowledge graph.
 Context Associations is available at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification).
 The approach was previously [part of a demonstrator](cite:cites dedecker2025demonstrating).
+This work elaborates on the requirements and other options that exist.
 
 To achieve a uniformly queryable annotation method,
 i.e., to merge contextual information and their target statements from multiple applications into a single queryable triplestore,
@@ -218,8 +219,6 @@ To define the exact associations between graphs,
 we make use of an anchor triple that provides a directed link between both graphs in the form of
 `_:sourceGraph ca:aboutGraph _:targetGraph`.
 This also allows for graph chaining, i.e., recursive annotations (**REQ5**).
-
-The specification for Context Associations can be found at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification).
 
 ### Model encoding/decoding
 
