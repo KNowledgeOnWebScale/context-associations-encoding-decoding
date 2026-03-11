@@ -178,7 +178,7 @@ that need to be implemented to generate the signed credential or verify the cred
 [citeneeded]
 -->
 <!-- BDM: I don't see the relevance of this crypto stuff here. we only need to discuss annotation models and methods -->
-Within Verifiable Credentials (VCs) [citeneeded],
+Within Verifiable Credentials (VCs),
 the default graph is the target data,
 and named graphs are used to store the contextual information.
 This hybrid method of representing contextual information
@@ -454,7 +454,7 @@ especially the lack of support for constructing graphs,
 which is impossible to work around in the native SPARQL evaluation, -->
 
 However,
-we can make use of the ARQ query engine provided by Apache Jena [citeneeded].
+we can make use of the ARQ query engine provided by Apache Jena[^jena].
 This SPARQL processor provides two functions that extend beyond the SPARQL specification,
 which allow us to perform the extraction in a single iteration:
 (1) ARQ provides a union graph under the identifier `urn:x-arq:UnionGraph`---a materialized union of the named graphs present in the queried RDF dataset---which allows us to extract the anchor triples from all graphs in one iteration; and
@@ -462,6 +462,8 @@ which allow us to perform the extraction in a single iteration:
 enables us to directly re-create the named graphs in the annotation chain,
 without having to iterate separately over each graph.
 Below, we show the ARQ query that allows us to uniformly gather all contextual information of `ex:Alice` .
+
+[^jena]: https://jena.apache.org/index.html
 
 
 <!-- Firstly,
