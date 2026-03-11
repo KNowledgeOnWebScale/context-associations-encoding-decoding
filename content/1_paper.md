@@ -544,7 +544,7 @@ and RO-Crate's association model is outside the scope of the RDF data. -->
 
 |               | Reification              | Singleton property       | Default graph and named graph  | Named graphs   | Subject-bound | Context Associations |
 |---------------|--------------------------|--------------------------|------------------------------------------|-------------------------------|--------------------------------------------------|----------------------|
-| Interoperable | ✅                       | ✅                       | ❓                                       | ❓                            | ❓                                                    | ✅                    |
+| Interoperable | ✅                       | ✅                       | ❓                                       | ❓                            | ❓                                                    | ❓                    |
 | RDF Support   | one triple      | one triple      | triples/<br/>triple terms            | triples/<br/>triple terms | subject-bound triples                          | ✅                    |
 | Explicit      | ✅                       | ✅                       | ✅                                       | ✅                            | ❓                                                    | ✅                    |
 | Immutable     | ❓ | ❓ | default graph collisions             | ❓      | ❓                              | ✅                    |
@@ -561,26 +561,38 @@ At Immutable, ❓ denotes immutability requires globally unique and non-collidin
 
 ## Conclusion {#sec-conclusion}
 
+<!--
 Context Associations is an approach and associated specification and tooling
-that allows to more explicitly state how context is associated with target data in RDF knowledge graphs, 
+that allows to more explicitly state how contextual information is associated with target data in RDF knowledge graphs,
 using default RDF 1.1 features.
 Where other systems introduce custom association methods,
-do not support annotating all types of RDF statements, 
+do not support annotating all types of RDF statements,
 or introduce the risk of collisions when merging different annotations in a single triplestore,
-Context Associations can be used to losslessly convert data coming from these other systems into a single queryable annotation model.
+Context Associations can be used to losslessly encode contextual information and target data coming from  these other systems into a single queryable annotation model.
 We show how Context Associations allows you to merge all kinds of data in a single RDF store
 and use a single query
 to discover which types of contextual information are associated with which target data, across all original systems.
+-->
 
-By providing a uniform representation of context statements associated with target RDF statements,
-we enable discovery, exchange, storage, and processing of heterogenous annotations.
+In Table 1, we show how Context Associations compares to existing annotation models and methods.
+Although Context Associations in its current form is a custom annotation method,
+being a superset of existing models and methods shows the potential to increase interopability across existing annotation models and methods.
+Our use case demonstrations shows its practical feasibility.
 
-<!-- TODO: improve -->
-The Open Digital Rights Language (ODRL) specification defines the resource to which the policy is associated
+Context Associations does not solve the native ambiguity between 'what is metdata vs what is data',
+however, it does allow to explicitly scope contextual information from target data in existing annotation methods.
+The demonstration shows that this allows uniformly extracting contextual information across existing methods,
+and thus provide a more complete picture of data quality assertions of the same target data.
+
+<!-- By providing a uniform representation of context statements associated with target RDF statements, -->
+Our previous work showed a first application of Context Associations in the scope of ODRL,
+and future work involves further application of Context Associations to improve enabling of
+discovery, exchange, storage, and processing of heterogenous annotations.
+
+<!-- The Open Digital Rights Language (ODRL) specification defines the resource to which the policy is associated
 either through a `odrl:hasPolicy` predicate, defined over the resource, or
 inversely the resource can be linked from the policy using the `odrl:target` property.
 This policy target is defined in the specification as a resource or a collection of resources that are the subject of a Rule.
 Context Associations can be used as general model to cover this association,
-which we will further investigate in future work.
+which we will further investigate in future work. -->
 
-<!-- TODO: mention about just making explicit what is in protocols, not making any judgements on 'what is metadata' -->
