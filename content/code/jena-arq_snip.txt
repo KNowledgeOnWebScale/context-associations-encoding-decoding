@@ -1,6 +1,3 @@
-PREFIX ca: <https://w3id.org/context-associations>
-PREFIX ex: <https://example.com/>
-
 CONSTRUCT {
   GRAPH ?g { ?s ?p ?o }
 } WHERE {

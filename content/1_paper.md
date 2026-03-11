@@ -21,11 +21,8 @@ There are many possible _annotation models_--i.e., RDF-level models to associate
 even more _annotation methods_---i.e., application-specific instances of an annotation model.
 These annotation methods rely on application-specific specifications and protocol definitions,
 as illustrated by mature annotation systems
-such as DQV, nanopublications[^nanopublications],
-RO-Crates[^rocrates], and [W3C Verifiable Credentials (VCs)](cite:cites w3c-vc-data-model-2-20250515).
-
-[^nanopublications]: Nanopublication Guidelines: [https://nanopub.net/guidelines/working_draft/](https://nanopub.net/guidelines/working_draft/)
-[^rocrates]: RO-Crate Metadata Specification: [https://w3id.org/ro/crate/1.2](https://w3id.org/ro/crate/1.2)
+such as DQV, nanopublications [](cite:cites nanopub-guidelines-working-draft),
+RO-Crates [](cite:cites rocrate-1.2.0-zenodo), and [W3C Verifiable Credentials (VCs)](cite:cites w3c-vc-data-model-2-20250515).
 
 For example, [the Data Quality Vocabulary (DQV)](cite:cites w3c-dqv-20161215) uses the term-bound annotation model,
 where the annotation method relies on DQV-specific relations and classes.
@@ -120,7 +117,7 @@ which complicates semantic interpretation and often requires additional conventi
 
 [^reif]: https://www.w3.org/TR/rdf-mt/#Reif
 
-**Singleton properties** are a proposed method in RDF to overload a triple predicate, similar to the working of Labeled Property Graphs [TODO:cite],
+**Singleton properties** are a proposed method in RDF to overload a triple predicate, similar to the working of Labeled Property Graphs [](cite:cites nguyen2014don),
 in which the predicate is replaced by an instanced predicate, derived from the original predicate, that can be referenced in other statements to associate contextual information to the original relation.
 <!-- todo: discuss semantics of approach. -->
 
@@ -128,8 +125,7 @@ in which the predicate is replaced by an instanced predicate, derived from the o
 a (name, RDF graph) pair called a named graph.
 However, similar to reification,
 the semantic relation between the name identifier and RDF graph remains under-specified
-and is typically fixed by application-level conventions.
-<!-- todo: cite caroll paper -->
+and is typically fixed by application-level conventions [](cite:cites CARROLL2005247).
 
 <!-- moved this to here for consistency -->
 With the upcoming RDF 1.2 standardization work[^rdf12],
@@ -452,7 +448,7 @@ especially the lack of support for constructing graphs,
 which is impossible to work around in the native SPARQL evaluation, -->
 
 <figure id="arq-code" class="listing">
-````/code/jena-arq.txt````
+````/code/jena-arq_snip.txt````
 <figcaption markdown="block">
 Extraction of the named graphs annotation chains with a single construct query using Apache Jena ARQ.
 </figcaption>
