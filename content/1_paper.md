@@ -239,13 +239,13 @@ To ensure no side-effects from merging target data and contextual information,
 graph merge operations at the RDF level must be prevented.
 For this, we make use of blank node identifiers for the graph name of these named graphs (**REQ4**).
 This ensures the scope of the context statements and its association to a target set of statements is local
-to the scope of the storage, exchange or operation in which they are used.
+to the scope of the storage, exchange, or operation in which they are used.
 If the use of blank nodes is impractical---e.g., due to limitations of
 having to extract specific graphs based on their name value---skolem identifiers can be used
 to ensure unique generation of the graph name at the time of its construction.
 
 To define the exact associations between graphs,
-we make use of an anchor triple that links both graphs in the form of
+we make use of an anchor triple that provides a directed link between both graphs in the form of
 `_:sourceGraph ca:aboutGraph _:targetGraph`.
 This also allows for graph chaining, i.e., recursive annotations (**REQ5**).
 
@@ -254,19 +254,26 @@ The specification for Context Associations can be found at [https://w3id.org/con
 ### Model encoding/decoding
 
 <!-- BDM: this paragraph reads wrong: you state that the original syntax can be reconstructed, but the encoding may break the syntactic constraints? Did you mean ''the original semantics' can be reconstructed? -->
-We define annotation method encoding to the Context Association model at a syntactic level.
-Encoding and decoding can take place losslessly:
-the original syntax of the contextual information can be reconstructed.
-However, this encoding/decoding may break the syntactic constraints
-of the original annotation models, such as for VCs,
-where the resulting context association model of the signature
-cannot be verified because of a mismatch in the data structure.
-Here, the annotation model should first be reverted
-before evaluating operations with syntactic constraints.
+Context Associations explicitly provide the directed association between contextual information and target data.
+Existing annotation methods can be _encoded_ as Context Associations---typically requiring
+customized processing as existing annotation methods may have implicit conventions---and
+Context Associations can be _decoded_ into existing annotation methods in a general fashion.
+Encoding and decoding is lossless at semantic level.
+Encoding typically follows the following steps:
 
-The encoding algorithm takes the following form:
+1. Based on the annotation method, scope the target data and identify the (different types of) contextual information
+  - For NanoPub, the `AssertionGraph` is the target data and there are two types of contextual information: `Provenance` and `PublicationInfo`
+  - For VCs, there are two target data graphs: the default graph, and the data linked through the `credentialSubject`. The `proof` graph contextual information to both.
+2. Based on how the contextual information is attached to the target data, convert into Context Associations. The contextual information is always put in a named graph with blanknode label.
+  - For reification, embed the original triple as target data in a named graph with blanknode label.
+  - For a singleton property, separate the triple containing the singleton property and the accompanying `rdf:singletonPropertyOf` triple, and embed them as target data in a named graph with blanknode label.
+  - For (default and named) graphs, rename the graph to a named graph with blanknode label and add the original graph name through `ca:graphName`.
+  - For subject/predicate/object-bound linking, put target data in a named graph with blanknode label.
 
-**For a target RDF predicate term**, we cannot uniformly retain the original predicate in our encoding,
+For each annotation method, customized encodings need to be provided.
+These, and a general decoding of Context Associations are validated through a SPARQL CONSTRUCT Queries, are made available at https://github.com/KNowledgeOnWebScale/context-associations-encoding-decoding under the permissive MIT license.
+
+<!-- **For a target RDF predicate term**, we cannot uniformly retain the original predicate in our encoding,
 as named graphs cannot inherently be used to model annotations on triple predicates.
 For the encoding, the following algorithm is used:
 
@@ -303,8 +310,15 @@ according to the used annotation model.
 
 In case of combined requirements, such as for VCs,
 where there are a target set of triples, as well as named graphs,
-the relevant algorithms are evaluated over the relevant target parts of the data.
+the relevant algorithms are evaluated over the relevant target parts of the data. -->
 
+The original semantics of the contextual information can be reconstructed,
+however, syntactic constraints of the original annotation models
+may require additional processing.
+For example, VCs encode verification signatures:
+this verification signature cannot be verified in the Context Association encoding
+due a mismatch in the data structure (some VC signatures depend on a specific JSON frame),
+and can only be verified after decoding and reframing the data in the correct JSON frame.
 
 ## Demonstration {#sec-demonstration}
 
@@ -313,7 +327,9 @@ we take a use-case of a research output of a researcher associated both with a u
 and a company.
 The contextual information consists of an ro-crate
 defining the research output, dataset, and author information,
-a nanopublication of the 
+a nanopublication of the publication,
+and a verifiable credential that states the diploma of the researcher.
+All 
 
 ### RO-Crate
 RO-Crates are a well known standard for the exchange of composite research material in scientific ecosystems.
@@ -542,3 +558,5 @@ inversely the resource can be linked from the policy using the `odrl:target` pro
 This policy target is defined in the specification as a resource or a collection of resources that are the subject of a Rule.
 Context Associations can be used as general model to cover this association,
 which we will further investigate in future work.
+
+<!-- TODO: mention about just making explicit what is in protocols, not making any judgements on 'what is metadata' -->
