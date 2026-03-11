@@ -299,6 +299,7 @@ All demonstration data is available at https://github.com/KNowledgeOnWebScale/co
 
 Below, we include the relevant encoded Context Associations,
 for the RO-Crate, nanopublication, and verifiable credential.
+Prefixes are omitted for brevity but can be found at the repository.
 
 <!-- ### RO-Crate
 RO-Crates are a well known standard for the exchange of composite research material in scientific ecosystems.

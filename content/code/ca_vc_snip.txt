@@ -1,21 +1,11 @@
-@prefix ca:   <https://w3id.org/context-associations#> .  
-@prefix ex:   <http://example.org/> .
-@prefix dct:  <http://purl.org/dc/terms/> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
-@prefix sec:  <https://w3id.org/security#> .
-
 _:data {
     ex:Alice ex:hasDiploma ex:MasterDegree .
 }
 
 _:proof {
     _:proof ca:aboutGraph _:data.
-
     _:proof dct:created "2026-02-19T10:32:00Z"^^xsd:dateTime.
-    _:proof a sec:DataIntegrityProof>.
     _:proof sec:cryptosuite> "eddsa-rdfc-2022"^^sec:cryptosuiteString.
-    _:proof sec:proofPurpose> sec:assertionMethod.
     _:proof sec:proofValue> "[...]"^^sec:multibase.
     _:proof sec:verificationMethod> ex:AlicePublicKey.
 }
-
