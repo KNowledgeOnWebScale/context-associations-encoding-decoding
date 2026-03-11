@@ -137,16 +137,14 @@ while preserving statement-level expressivity.
 
 ### Annotation methods
 
-In practice, annotation methods instantiate the above models through application-specific specifications.
-DQV, nanopublications,
+In practice, annotation methods instantiate the above models through application-specific methods (see examples in [Section 1](#sec-intro)).
+<!-- DQV, nanopublications,
 RO-Crates, and Verifiable Credentials
 each have introduced distinct annotation methods,
-which were exemplified in [Section 1](#sec-intro).
+which were exemplified in [Section 1](#sec-intro). -->
 <!-- todo: complement with current association models within the protocol: subject-based referencing, graph-based referencing, out-of-band referencing. -->
-
 <!-- TODO: native RDF? -->
 <!-- Data Cube Vocabulary? https://www.w3.org/TR/vocab-data-cube/ -->
-
 <!-- Systems like trustyURI > dataset canonicalization (work of Braun? is it? or external reference) -->
 Some annotation methods build on RDF knowledge graph canonicalization
 to create a stable identifier to associate contextual information to.
