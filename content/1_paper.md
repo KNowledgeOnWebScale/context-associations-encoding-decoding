@@ -232,14 +232,15 @@ Context Associations can be _decoded_ into existing annotation methods in a gene
 Encoding and decoding is lossless at semantic level.
 Encoding typically follows the following steps:
 
-1. Based on the annotation method, scope the target data and identify the (different types of) contextual information
-  - For NanoPub, the `AssertionGraph` is the target data and there are two types of contextual information: `Provenance` and `PublicationInfo`
-  - For VCs, there are two target data graphs: the default graph, and the data linked through the `credentialSubject`. The `proof` graph contextual information to both.
-2. Based on how the contextual information is attached to the target data, convert into Context Associations. The contextual information is always put in a named graph with blanknode label.
-  - For reification, embed the original triple as target data in a named graph with blanknode label.
-  - For a singleton property, separate the triple containing the singleton property and the accompanying `rdf:singletonPropertyOf` triple, and embed them as target data in a named graph with blanknode label.
-  - For (default and named) graphs, rename the graph to a named graph with blanknode label and add the original graph name through `ca:graphName`.
-  - For term-bound linking, put target data in a named graph with blanknode label.
+First, based on the annotation method, scope the target data and identify the (different types of) contextual information.
+For NanoPub, the `AssertionGraph` is the target data and there are two types of contextual information: `Provenance` and `PublicationInfo`.
+For VCs, there are two target data graphs: the default graph, and the data linked through the `credentialSubject`. The `proof` graph contextual information to both.
+
+Second, based on how the contextual information is attached to the target data, convert into Context Associations. The contextual information is always put in a named graph with blanknode label.
+For **reification**, embed the original triple as target data in a named graph with blanknode label.
+For a **singleton property**, separate the triple containing the singleton property and the accompanying `rdf:singletonPropertyOf` triple, and embed them as target data in a named graph with blanknode label.
+For (default and named) **graphs**, rename the graph to a named graph with blanknode label and add the original graph name through `ca:graphName`.
+For **term-bound linking**, put target data in a named graph with blanknode label.
 
 For each annotation method, customized encodings need to be provided.
 These, and a general decoding of Context Associations are validated through a SPARQL CONSTRUCT Queries, are made available at https://github.com/KNowledgeOnWebScale/context-associations-encoding-decoding under the permissive MIT license.
