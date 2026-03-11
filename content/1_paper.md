@@ -113,10 +113,10 @@ on data level, it is not possible to differentiate contextual information from t
 <!-- reification methods are semantically difficult to process -->
 **[Reification](https://www.w3.org/TR/rdf-mt/#Reif)** allows deconstructing triples to a set of triples defining the subject, predicate and object of the reified triple,
 to associate contextual information.
-<!-- However, RDF 1.0 Semantics [citeneeded] state that
+However, RDF 1.0 Semantics state that
 that the reified statement does not entail the reification graph,
 nor vice versa,
-which complicates semantic interpretation and often requires additional conventions during processing. -->
+which complicates semantic interpretation and often requires additional conventions during processing.
 
 **Singleton properties** are a proposed method in RDF to overload a triple predicate, similar to the working of Labeled Property Graphs [TODO:cite],
 in which the predicate is replaced by an instanced predicate, derived from the original predicate, that can be referenced in other statements to associate contextual information to the original relation.
@@ -124,9 +124,9 @@ in which the predicate is replaced by an instanced predicate, derived from the o
 
 **Named graphs** were introduced for defining graphs in an RDF dataset, in the form of
 a (name, RDF graph) pair called a named graph.
-<!-- However, similar to reification,
+However, similar to reification,
 the semantic relation between the name identifier and RDF graph remains under-specified
-and is typically fixed by application-level conventions [citeneeded]. -->
+and is typically fixed by application-level conventions.
 <!-- todo: cite caroll paper -->
 
 <!-- moved this to here for consistency -->
