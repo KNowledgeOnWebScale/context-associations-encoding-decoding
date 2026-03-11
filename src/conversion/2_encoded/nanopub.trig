@@ -1,0 +1,46 @@
+PREFIX ca:   <https://w3id.org/context-associations#>
+PREFIX dct:  <http://purl.org/dc/terms/>
+PREFIX ex:   <http://example.org/>
+PREFIX np:   <http://www.nanopub.org/nschema#>
+PREFIX pav:  <http://purl.org/pav/>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX this: <http://example.org/nanopub/np1#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+
+<urn:ca:0f1276122291ca0c7fa87bfc03339e00d74035ad80562942c3223ecae8806fe0> {
+    this:np1  dct:created  "2026-02-19T10:31:00Z"^^xsd:dateTime;
+            dct:license    <https://creativecommons.org/licenses/by/4.0/>;
+            pav:createdBy  ex:Alice .
+    
+    <urn:ca:0f1276122291ca0c7fa87bfc03339e00d74035ad80562942c3223ecae8806fe0>
+            ca:aboutGraph  <urn:ca:5aa7695555703f1f8941979923de9237dd7cfd87d9c675dac9fd02f50a5a1347>;
+            ca:graphName   this:PubInfo .
+}
+
+<urn:ca:5aa7695555703f1f8941979923de9237dd7cfd87d9c675dac9fd02f50a5a1347> {
+    ex:Paris  ex:isCapitalOf  ex:France .
+    
+    <urn:ca:5aa7695555703f1f8941979923de9237dd7cfd87d9c675dac9fd02f50a5a1347>
+            ca:graphName  this:Assertion .
+}
+
+<urn:ca:8fe2a0f0fc99d2dc095677f39561fa773044c9fe4653c8daf43c7284dca19701> {
+    this:Assertion  prov:generatedAtTime  "2026-02-19T10:30:00Z"^^xsd:dateTime;
+            prov:wasAttributedTo  ex:Alice;
+            prov:wasDerivedFrom   <https://www.wikidata.org/entity/Q90> .
+    
+    <urn:ca:8fe2a0f0fc99d2dc095677f39561fa773044c9fe4653c8daf43c7284dca19701>
+            ca:aboutGraph  <urn:ca:5aa7695555703f1f8941979923de9237dd7cfd87d9c675dac9fd02f50a5a1347>;
+            ca:graphName   this:Provenance .
+}
+
+<urn:ca:80d44ff764053bab0f943920a9587ce98d5bac38a4ff7af2ca34f120043ae21a> {
+    this:np1  a                    np:Nanopublication;
+            np:hasAssertion        this:Assertion;
+            np:hasProvenance       this:Provenance;
+            np:hasPublicationInfo  this:PubInfo .
+    
+    <urn:ca:80d44ff764053bab0f943920a9587ce98d5bac38a4ff7af2ca34f120043ae21a>
+            ca:aboutGraph  <urn:ca:5aa7695555703f1f8941979923de9237dd7cfd87d9c675dac9fd02f50a5a1347> , <urn:ca:8fe2a0f0fc99d2dc095677f39561fa773044c9fe4653c8daf43c7284dca19701> , <urn:ca:0f1276122291ca0c7fa87bfc03339e00d74035ad80562942c3223ecae8806fe0>;
+            ca:graphName   this:Head .
+}
