@@ -85,7 +85,7 @@ As the name suggests, the Resource Description Framework lends itself well to th
 RDF is inherently aimed at the annotation of information using (Web) URI references
 as the abstraction layer for a target concept of the annotation.
 These target URIs can be
-Web resources that can be dereferenced from that target URI---following recommendations of vocabularies such as the Data Catalog Vocabulary (DCAT) [citeneeded]---
+Web resources that can be dereferenced from that target URI--following recommendations of vocabularies such as the Data Catalog Vocabulary (DCAT)--
 or internal entities to the RDF knowledge graph.
 <!-- scope this work to 'inline' annotation -->
 Within the scope of this paper and aligned with related work [](cite:cites frey2019evaluation),
@@ -111,12 +111,14 @@ Within native RDF annotation, the boundary between contextual information and ta
 on data level, it is not possible to differentiate contextual information from target data (i.e., both are similarly bound to the same subject, predicate, or object term).
 
 <!-- reification methods are semantically difficult to process -->
-**[Reification](https://www.w3.org/TR/rdf-mt/#Reif)** allows deconstructing triples to a set of triples defining the subject, predicate and object of the reified triple,
+**Reification**[^reif] allows deconstructing triples to a set of triples defining the subject, predicate and object of the reified triple,
 to associate contextual information.
 However, RDF 1.0 Semantics state that
 that the reified statement does not entail the reification graph,
 nor vice versa,
 which complicates semantic interpretation and often requires additional conventions during processing.
+
+[^reif]: https://www.w3.org/TR/rdf-mt/#Reif
 
 **Singleton properties** are a proposed method in RDF to overload a triple predicate, similar to the working of Labeled Property Graphs [TODO:cite],
 in which the predicate is replaced by an instanced predicate, derived from the original predicate, that can be referenced in other statements to associate contextual information to the original relation.
@@ -130,10 +132,12 @@ and is typically fixed by application-level conventions.
 <!-- todo: cite caroll paper -->
 
 <!-- moved this to here for consistency -->
-With the upcoming RDF 1.2 standardization work [citeneeded],
+With the upcoming RDF 1.2 standardization work[^rdf12],
 **triple terms** (formerly known as quoted triples in RDF-star) provide a compact way to annotate individual triples.
 Triple terms can be understood as addressing the verbosity and usability limitations of reification
 while preserving statement-level expressivity.
+
+[^rdf12]: https://www.w3.org/TR/rdf12-concepts/
 
 ### Annotation methods
 
@@ -149,12 +153,15 @@ which were exemplified in [Section 1](#sec-intro). -->
 Some annotation methods build on RDF knowledge graph canonicalization
 to create a stable identifier to associate contextual information to.
 This provides a **reificiation-like** pattern that is not limited to a single term.
-Through JSON-LD expansion and with accompanying W3C CCG Note “RDF Dataset Canonicalization and Hashing” and related Data Integrity specifications, Verifiable Credentials can be interpreted as RDF datasets---with a stable identifier---for the purpose of canonicalization and cryptographic proof generation [citeneeded].
+Through JSON-LD expansion and with accompanying W3C CCG Note “RDF Dataset Canonicalization and Hashing” and related Data Integrity specifications, Verifiable Credentials can be interpreted as RDF datasets---with a stable identifier---for the purpose of canonicalization and cryptographic proof generation[^rdfcanon].
 Specifications such as trustyURI make use of an RDF knowledge graph canonicalization algorithm to generate a hash, and
-append this hash value as the resource extension to produce stable (and verifiable) identifiers [citeneeded].
+append this hash value as the resource extension to produce stable (and verifiable) identifiers[^trustyuri].
 <!-- BDM: I moved ODRL to future work. -->
 Many specifications, such as Nanopublications,
 make use of these **named graphs** to organize their contents and associated context in these graphs.
+
+[^rdfcanon]: https://www.w3.org/TR/rdf-canon/
+[^trustyuri]: https://trustyuri.net/spec/v1.FADQoZWcYugekAb4jW-Zm3_5Cd9tmkkYEV0bxK2fLSKao.md
 
 <!-- Shape expressions such as SHACL [citeneeded] and SHEX [citeneeded] can be used to define a specific selection of target data.
 Specifically, closed shapes in SHACL can be used, with prior work of converting shape expressions to
