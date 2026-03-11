@@ -1,6 +1,8 @@
 ## Introduction {#sec-intro}
 
 <!-- {:.comment data-author="BenDM"}
+NO FEEDBACK HERE, JUST NOTES FROM BEN:
+
 Definitions:
 contextual information === more general term for metadata. Metadata is a too loaded term (and some see all RDF as "metadata"). In the scope of this paper, contextual information consists of (an arbitrary set of) RDF statements and graphs.
 target data === the data some contextual information is about. In the scope of this paper, target data consists of (an arbitrary set of) RDF statements and graphs.
@@ -10,79 +12,67 @@ annotation model === used model to associate contextual information to target da
 annotation method === combination of model + (sometimes implicit) knowledge to associate contextual information to target data (i.e., more specific than model). e.g. VC uses combination of named graphs and default graph through predicate 'credentialSubject'. Idea of CA is that you can create a model that is a superset of existing methods.
 annotation system === implementation of an annotation method. -->
 
-Data quality _, usability, trustworthiness_{:.propose} is typically asserted through _annotation_:
-associating _contextual information_ (of data quality) with _target data_.
-<!-- BDM: I think usability and trustworthiness are too dense terms to use in the first sentence. I'd rather later on state something like 'data quality has many different facets, eg usability and trustworthiness as well' -->
-Both the contextual information and target data can be a set of RDF statements and graphs.
-<!-- This target data is an _RDF knowledge graph_, but also the combination of target data and annotations is an RDF knowledge graph. -->
-There are many possible _annotation models_---the RDF model to associate contextual information to target data (e.g., reification, graphs)---and
-even more _annotation methods_---the application-specific instances of an annotation model.
+
+Data quality features such as usability or trustworthiness are typically asserted through _annotations_:
+associating _contextual information_ (about data quality) with _target data_.
+Both contextual information and target data can consist of sets of RDF statements and graphs,
+often traveling together and being queried as a single KG.
+There are many possible _annotation models_---i.e., RDF-level models to associate contextual information with target data (e.g., reification, graphs)---and
+even more _annotation methods_---i.e., application-specific instances of an annotation model.
 These annotation methods rely on application-specific specifications and protocol definitions,
-as we see in mature annotation systems
-such as DQV, nanopublications [^nanopublications], 
-RO-Crates [^rocrates], and W3C Verifiable Credentials (VCs) [](cite:cites w3c-vc-data-model-2-20250515).
+as illustrated by mature annotation systems
+such as DQV, nanopublications [^nanopublications],
+RO-Crates [^rocrates], and [W3C Verifiable Credentials (VCs)](cite:cites w3c-vc-data-model-2-20250515).
 
 [^nanopublications]: Nanopublication Guidelines: https://nanopub.net/guidelines/working_draft/
-[^rocrates]: RO-Crate Metadata Specification: https://w3id.org/ro/crate/1.2 
+[^rocrates]: RO-Crate Metadata Specification: https://w3id.org/ro/crate/1.2
 
-For example, the Data Quality Vocabulary (DQV) [](cite:cites w3c-dqv-20161215) uses the subject-bound annotation model,
-where the annotation method relies on DQV-specific relations and classes.
-Data quality is represented as subject-bound associations of type `dqv:QualityAnnotation` or `dqv:QualityMeasurement`
-that directly associate contextual information (of data quality) to target datasets or distributions---represented through DCAT [citeneeded]---via the predicates `oa:hasTarget` (from the Web Annotation Ontology [citeneeded]) or `dqv:computedOn`, respectively.
+For example, the [Data Quality Vocabulary (DQV)](cite:cites w3c-dqv-20161215) uses a subject-bound annotation model,
+in which the annotation method relies on DQV-specific relations and classes.
+Data quality is represented through subject-bound associations of type `dqv:QualityAnnotation` or `dqv:QualityMeasurement`
+that directly associate contextual information (about data quality) with target datasets or distributions--represented through DCAT--via the predicates `oa:hasTarget` (from the Web Annotation Ontology[^wao] or `dqv:computedOn`, respectively.
 In the Nanopublication specification, contextual information is associated through explicit graph structuring:
-a nanopublication is composed of four named graphs---Head, Assertion, Provenance, and PublicationInfo---and
-the Head graph uses predicates such as `np:hasAssertion`, `np:hasProvenance`, and `np:hasPublicationInfo` 
-to relate the nanopublication resource to its constituent graphs [citeneeded].
-In RO-Crate, contextual information is associated implicitly
-through the JSON-LD graph structure of the RO-Crate Metadata Document using existing vocabularies (e.g., Schema.org[^schema]) where relationships between entities (e.g., dataset → file, file → creator) are encoded as linked properties in the `@graph` [citeneeded].
-In the VC Data Model specification, contextual information is associated through an explicit credential structure: a verifiable credential is composed of core properties such as `credentialSubject` to link to the identified subject resource, and `proof` to bind the credential to a cryptographic verification method [citeneeded].
+a nanopublication is composed of four named graphs--Head, Assertion, Provenance, and PublicationInfo--and
+the Head graph uses predicates such as `np:hasAssertion`, `np:hasProvenance`, and `np:hasPublicationInfo`
+to relate the [nanopublication resource to its constituent graphs](cite:cites groth2010nanopub-anatomy).
+In RO-Crate, contextual information is associated more implicitly
+through the JSON-LD graph structure of the RO-Crate Metadata Document using existing vocabularies, such as Schema.org[^schema],
+where relationships between entities (e.g., dataset → file, file → creator) are encoded as [linked properties in the `@graph`](cite:cites rocrate-1.2.0-zenodo).
+In the VC Data Model specification, contextual information is associated through an explicit credential structure:
+a verifiable credential is composed of core properties such as `credentialSubject`, which links to the identified subject resource,
+and `proof`, which [binds the credential to a cryptographic verification method](cite:cites w3c-vc-data-model-2-20250515).
 
-As can be seen, these annotation methods are not aligned and not always explicitly described at the data level.
-When, e.g., asserting data quality,
+[^schema]: The schema.org initiative: https://schema.org
+[^wao]: The Web Annotation Ontology: https://www.w3.org/ns/oa
+
+As these examples illustrate, annotation methods are not aligned and are not always explicitly described at the data level.
+When, for example, asserting data quality,
 this mismatch in annotation methods across applications
-limits uniform storage, exchange, and discovery of contextual information associated to a target set of statements.
-For example, when integrating both the contextual information as the target data in a triplestore,
-it is hard to distinguish the contextual information from the target data
-(especially when, e.g., the quality measurements themselves also have associated contextual information).
+limits the uniform storage, exchange, and discovery of contextual information associated with a target set of statements.
+For example, when integrating both contextual information and target data in a triplestore,
+it becomes difficult to distinguish contextual information from the target data itself
+(especially when, for example, the quality measurements themselves also have associated contextual information).
 
 In this paper, we present Context Associations:
-an approach and associated specification and tooling
+an approach, together with an associated specification and tooling,
 to uniformly model and query
 which contextual information is associated with which statements in an RDF knowledge graph.
 Context Associations is available at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification).
+The approach was previously [part of a demonstrator](cite:cites dedecker2025demonstrating).
 
-To achieve a uniform queryable annotation method,
-i.e., merging contextual information and their target statements from multiple applications into a single queryable triplestore,
+To achieve a uniformly queryable annotation method,
+i.e., to merge contextual information and their target statements from multiple applications into a single queryable triplestore,
 we put forward the following target requirements:
 
-<!-- Requirements from where? -->
-<!--
-- queryable -> part of RDF data model
-  - should support set of statements
-- immutable interpretation (i.e. no side-effects from merging with other data)
-  - must use blank node
-- recursive/chaining -> metadata of metadata
-- RDF support: triple, triple term, quad
-  - default graph via bnode
-  - named graphs renamen via bnode -> is opnieuw metadata
-  - multiple graphs?
--->
+- REQ1: the solution is **interoperable** and **implementation-independent**: no extensions to RDF or SPARQL are needed, and any existing triplestore can be used.
+- REQ2: target data can be **any arbitrary set of statements and graphs**: target data is not bound to a single specific subject or graph, and can contain any existing RDF 1.1 (and upcoming RDF 1.2) statements, i.e., any combination of triples, graphs, and triple terms.
+- REQ3: annotations are **explicit**: both the target statements and the associated contextual information are available in the triplestore.
+- REQ4: annotations are **immutable**: merging contextual information from multiple applications cannot introduce collisions or other side effects.
+- REQ5: annotations can be **recursive**: contextual information can itself have associated contextual information. As a result, contextual information can also be any arbitrary set of statements and graphs (see REQ2).
 
-- REQ1: the solution is **interoperable** and implement-independent: no extensions to RDF or SPARQL are needed and any existing triplestore can be used.
-- REQ2: target data can be **any arbitrary set of statements and graphs**: target data is not bound to a single specific subject or graph, and can have any existing RDF 1.1 (and upcoming RDF 1.2) statements, i.e., target data can contain any combination of triples, graphs, and triple terms.
-- REQ3: annotations are **explicit**: the target statements and associated contextual information are both available in the triplestore.
-- REQ4: annotations are **immutable**: there cannot be collisions or other side-effects from merging contextual information from multiple applications.
-- REQ5: annotations can be **recursive**: contextual information can itself have associated contextual information. As a result, also contextual information can be any arbitrary set of statements and graphs (see REQ2).
+We first give an extensive overview of the state of the art on the matter, then introduce the Context Associations approach, show how it can be applied in several use cases, and finally conclude with a summary table of the possible approaches and how they meet the aforementioned requirements.
 
-After discussing existing annotation models and methods in [Section 2](#sec-sota),
-we introduce Context Associations in [Section 3](#sec-context-associations),
-demonstrate in [Section 4](#sec-demonstration) and [Section 5](#sec-sparql-evaluation),
-discuss in [Section 6](#sec-comparison), and
-conclude in [Section 7](#sec-conclusion).
-
-## SoTA {#sec-sota}
-
-<!-- BDM: I joined sota and methods. That's all related work to me, and there was _a lot_ of redundancy. -->
+## State of the Art {#sec-sota}
 
 This section groups the existing landscape into annotation models, annotation methods,
 and annotation-related extensions to RDF/SPARQL.
@@ -115,14 +105,14 @@ the intended processing environment.
 #### Native RDF Annotation
 
 <!-- metadata representation models - part of RDF -->
-Native RDF annotation makes  use of RDF's capability
+Native RDF annotation makes  use of RDF’s capability
 to reference target resources using a target URI.
 <!-- TODO: improve, basically I want to introduce subject-bound annotations -->
 Within native RDF annotation, the boundary between contextual information and target data is fully implicit:
 on data level, it is not possible to differentiate contextual information from target data (i.e., they are both similarly bound to the same subject, predicate, or object).
 
 #### Reification
-<!-- reification methods are semantically difficult to process -->
+
 Reification was introduced with version 1.0 of the RDF specification [https://www.w3.org/TR/rdf-mt/#Reif],
 with supporting vocabulary in RDF Schema [https://www.w3.org/2001/sw/RDFCore/TR/WD-rdf-schema-20030117/#ch_reificationvocab],
 as a way to deconstruct triples to a set of triples defining the subject, predicate and object of the reified triple.
