@@ -2,17 +2,9 @@ PREFIX ca: <https://w3id.org/context-associations>
 PREFIX ex: <https://w3id.org/context-associations>
 
 CONSTRUCT {
-  GRAPH ?g {
-    ?s ?p ?o
-  }
+  GRAPH ?g { ?s ?p ?o }
 } WHERE {
-  GRAPH ?target {
-    { ?x ?y ex:Alice . }
-    UNION
-    { ex:Alice ?y ?z . }
-  }
-  GRAPH <urn:x-arq:UnionGraph> {
-    ?source ca:about* ?target .
-  }
+  GRAPH ?target { { ?x ?y ex:Alice . } UNION { ex:Alice ?y ?z . } }
+  GRAPH <urn:x-arq:UnionGraph> { ?source ca:about* ?target . }
   GRAPH ?source { ?s ?p ?o }
 }
