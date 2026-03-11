@@ -193,21 +193,21 @@ In this chapter, we are constructing a solution to REQ1-5 which we will call Con
 
 [^ca]: Available at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification)
 
-### Annotation Model
+In order to support a closed set of statements (**REQ2**), Context Associations use named graphs.
+While the semantics of named graphs have been left open in the RDF1.1 specification[^ng], they are a standard RDF 1.1 pattern (**REQ1**) that can be exploited.
+Furthermore, annotations are explicit: the identifier associated with the named graph can be used in the same triple/quad store (**REQ3**) by using an RDF term.
 
-Within Context Associations,
-associations are modeled through graph linking.
-This allows supporting concrete and closed sets of statements and graphs (**REQ2**).
-Graphs provide the most straightforward approach
-to modeling both the sets of statements,
-and their associations
-through the explicit linking of these graphs (**REQ3**).
-This is a standard RDF 1.1 pattern (**REQ1**).
+Named graphs however have two potential issues that we can work around[^pc].
+The first is that some quad store implementations may automatically merge certain named graphs in the default graph, assuming the named graphs are only used for partitioning.
+Here we pragmatically advice to be cautious when working with systems that work with this assumption.
 
-To ensure no side-effects from merging target data and contextual information,
+[^ng]: A working group note (2014) on the semantics of RDF Datasets: [https://www.w3.org/TR/rdf11-datasets/](https://www.w3.org/TR/rdf11-datasets/)
+[^pc]: A blog post with more elaborate explanations: [https://pietercolpaert.be/linkeddata/2025/09/30/named-graphs](https://pietercolpaert.be/linkeddata/2025/09/30/named-graphs)
+
+The second issue is that we need to ensure no side-effects from merging target data and contextual information:
 graph merge operations at the RDF level must be prevented.
-For this, we make use of blank node identifiers for the graph name of these named graphs (**REQ4**).
-This ensures the scope of the context statements and its association to a target set of statements is local
+For this, we came up with the cunning idea of using **blank node identifiers**, also previously applied [by Braun et al.](cite:cites braun2025rdf), for the graph name of these named graphs (**REQ4**).
+This way, the scope of the context statements and its association to a target set of statements is local
 to the scope of the storage, exchange, or operation in which they are used.
 If the use of blank nodes is impractical---e.g., due to limitations of
 having to extract specific graphs based on their name value---skolem identifiers can be used
@@ -217,8 +217,6 @@ To define the exact associations between graphs,
 we make use of an anchor triple that provides a directed link between both graphs in the form of
 `_:sourceGraph ca:aboutGraph _:targetGraph`.
 This also allows for graph chaining, i.e., recursive annotations (**REQ5**).
-
-### Model encoding/decoding
 
 Context Associations explicitly provide the directed association between contextual information and target data.
 Existing annotation methods can be _encoded_ as Context Associations---typically requiring
