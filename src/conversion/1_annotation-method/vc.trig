@@ -1,0 +1,29 @@
+@prefix cred: <https://www.w3.org/2018/credentials#> .
+@prefix ex: <https://www.w3.org/ns/credentials/examples#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sec: <https://w3id.org/security#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://company.com>
+  ex:name "Company" ;
+  ex:role "Intern" .
+
+<https://people.org/Alice>
+  ex:memberOf <https://company.com> .
+
+<urn:uuid:2b0b0f3d-0d51-4a8f-8b15-3c0ed5b8f4c1>
+  rdf:type cred:VerifiableCredential,
+           ex:OrganizationMembershipCredential ;
+  sec:proof _:b0 ;
+  cred:credentialSubject <https://people.org/Alice> ;
+  cred:issuanceDate "2026-02-25T10:00:00Z"^^xsd:dateTime ;
+  cred:issuer <did:example:company> .
+
+_:b0 {
+  _:b1
+    rdf:type ex:Ed25519Signature2020 ;
+    ex:created "2026-02-25T10:00:00Z" ;
+    ex:proofPurpose "assertionMethod" ;
+    ex:proofValue "z3m8R1aBcDeF...gHiJkLmNoPqRsTuVwXyZ" ;
+    ex:verificationMethod "did:example:issuer-company-a#key-1" .
+}

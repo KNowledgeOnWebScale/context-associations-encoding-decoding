@@ -1,35 +1,30 @@
 PREFIX ca:     <https://w3id.org/context-associations#>
 PREFIX cred:   <https://www.w3.org/2018/credentials#>
+PREFIX ex:     <https://www.w3.org/ns/credentials/examples#>
 PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX schema: <http://schema.org/>
 PREFIX sec:    <https://w3id.org/security#>
+PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
 
 <https://company.com>
-        <https://www.w3.org/ns/credentials/examples#name>
-                "Company";
-        <https://www.w3.org/ns/credentials/examples#role>
-                "Intern" .
+        ex:name  "Company";
+        ex:role  "Intern" .
 
 <urn:uuid:2b0b0f3d-0d51-4a8f-8b15-3c0ed5b8f4c1>
-        rdf:type                cred:VerifiableCredential , <https://www.w3.org/ns/credentials/examples#OrganizationMembershipCredential>;
+        rdf:type                cred:VerifiableCredential , ex:OrganizationMembershipCredential;
         sec:proof               _:b0;
         cred:credentialSubject  <https://people.org/Alice>;
-        cred:issuanceDate       "2026-02-25T10:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+        cred:issuanceDate       "2026-02-25T10:00:00Z"^^xsd:dateTime;
         cred:issuer             <did:example:company> .
 
 <https://people.org/Alice>
-        <https://www.w3.org/ns/credentials/examples#memberOf>
-                <https://company.com> .
+        ex:memberOf  <https://company.com> .
 
 _:b0 {
-    [ rdf:type  <https://www.w3.org/ns/credentials/examples#Ed25519Signature2020>;
-      <https://www.w3.org/ns/credentials/examples#created>
-              "2026-02-25T10:00:00Z";
-      <https://www.w3.org/ns/credentials/examples#proofPurpose>
-              "assertionMethod";
-      <https://www.w3.org/ns/credentials/examples#proofValue>
-              "z3m8R1aBcDeF...gHiJkLmNoPqRsTuVwXyZ";
-      <https://www.w3.org/ns/credentials/examples#verificationMethod>
-              "did:example:issuer-company-a#key-1"
+    [ rdf:type               ex:Ed25519Signature2020;
+      ex:created             "2026-02-25T10:00:00Z";
+      ex:proofPurpose        "assertionMethod";
+      ex:proofValue          "z3m8R1aBcDeF...gHiJkLmNoPqRsTuVwXyZ";
+      ex:verificationMethod  "did:example:issuer-company-a#key-1"
     ] .
 }
