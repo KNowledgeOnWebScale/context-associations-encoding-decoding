@@ -27,10 +27,10 @@ RO-Crates [^rocrates], and [W3C Verifiable Credentials (VCs)](cite:cites w3c-vc-
 [^nanopublications]: Nanopublication Guidelines: https://nanopub.net/guidelines/working_draft/
 [^rocrates]: RO-Crate Metadata Specification: https://w3id.org/ro/crate/1.2
 
-For example, the Data Quality Vocabulary (DQV) [](cite:cites w3c-dqv-20161215) uses the term-bound annotation model,
+For example, the Data Quality Vocabulary (DQV)[](cite:cites w3c-dqv-20161215) uses the term-bound annotation model,
 where the annotation method relies on DQV-specific relations and classes.
 Data quality is represented as term-bound associations of subjects of type `dqv:QualityAnnotation` or `dqv:QualityMeasurement`
-that directly associate contextual information (of data quality) to target datasets or distributions---represented through DCAT [citeneeded]---via the predicates `oa:hasTarget` (from the Web Annotation Ontology [citeneeded]) or `dqv:computedOn`, respectively.
+that directly associate contextual information (of data quality) to target datasets or distributions--represented through DCAT--via the predicates `oa:hasTarget` (from the Web Annotation Ontology[^wao]) or `dqv:computedOn`, respectively.
 In the Nanopublication specification, contextual information is associated through explicit graph structuring:
 a nanopublication is composed of four named graphs--Head, Assertion, Provenance, and PublicationInfo--and
 the Head graph uses predicates such as `np:hasAssertion`, `np:hasProvenance`, and `np:hasPublicationInfo`
@@ -102,47 +102,35 @@ Overall, they argue that no single approach is universally optimal, and
 that the choice of representation depends on the required granularity of annotation and
 the intended processing environment.
 
-#### Native RDF Annotation
-
 <!-- metadata representation models - part of RDF -->
-Native RDF annotation makes  use of RDF’s capability
+**Native RDF annotation** makes use of RDF’s capability
 to reference target resources using a target URI.
 <!-- TODO: improve, basically I want to introduce term-bound annotations -->
 Within native RDF annotation, the boundary between contextual information and target data is fully implicit:
 on data level, it is not possible to differentiate contextual information from target data (i.e., both are similarly bound to the same subject, predicate, or object term).
 
-#### Reification
-
-Reification was introduced with version 1.0 of the RDF specification [https://www.w3.org/TR/rdf-mt/#Reif],
-with supporting vocabulary in RDF Schema [https://www.w3.org/2001/sw/RDFCore/TR/WD-rdf-schema-20030117/#ch_reificationvocab],
-as a way to deconstruct triples to a set of triples defining the subject, predicate and object of the reified triple.
-Sharing a subject, this set of reified triples can then be referenced in the RDF graph to associate contextual information.
-However, RDF 1.0 Semantics [citeneeded] state that
+<!-- reification methods are semantically difficult to process -->
+**[Reification](https://www.w3.org/TR/rdf-mt/#Reif)** allows deconstructing triples to a set of triples defining the subject, predicate and object of the reified triple,
+to associate contextual information.
+<!-- However, RDF 1.0 Semantics [citeneeded] state that
 that the reified statement does not entail the reification graph,
 nor vice versa,
-which complicates semantic interpretation and often requires additional conventions during processing.
+which complicates semantic interpretation and often requires additional conventions during processing. -->
 
-#### Singleton Properties
-
-Singleton properties are a proposed method in RDF to overload a triple predicate, similar to the working of Labeled Property Graphs [TODO:cite],
+**Singleton properties** are a proposed method in RDF to overload a triple predicate, similar to the working of Labeled Property Graphs [TODO:cite],
 in which the predicate is replaced by an instanced predicate, derived from the original predicate, that can be referenced in other statements to associate contextual information to the original relation.
 <!-- todo: discuss semantics of approach. -->
 
-#### Named Graphs
-
-Named graphs were introduced in the RDF syntax with version 1.1 of the RDF specification [todo:cite]:
-a native model for defining graphs in an RDF dataset, in the form of
+**Named graphs** were introduced for defining graphs in an RDF dataset, in the form of
 a (name, RDF graph) pair called a named graph.
-However, similar to reification,
+<!-- However, similar to reification,
 the semantic relation between the name identifier and RDF graph remains under-specified
-and is typically fixed by application-level conventions [citeneeded].
+and is typically fixed by application-level conventions [citeneeded]. -->
 <!-- todo: cite caroll paper -->
-
-### Triple Terms
 
 <!-- moved this to here for consistency -->
 With the upcoming RDF 1.2 standardization work [citeneeded],
-triple terms (formerly known as quoted triples in RDF-star) provide a compact way to annotate individual triples.
+**triple terms** (formerly known as quoted triples in RDF-star) provide a compact way to annotate individual triples.
 Triple terms can be understood as addressing the verbosity and usability limitations of reification
 while preserving statement-level expressivity.
 
