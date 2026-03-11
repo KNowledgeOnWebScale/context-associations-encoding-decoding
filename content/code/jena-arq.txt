@@ -6,7 +6,11 @@ CONSTRUCT {
     ?s ?p ?o
   }
 } WHERE {
-  GRAPH ?target { ?x ?y ex:Alice . }
+  GRAPH ?target {
+    { ?x ?y ex:Alice . }
+    UNION
+    { ex:Alice ?y ?z . }
+  }
   GRAPH <urn:x-arq:UnionGraph> {
     ?source ca:about* ?target .
   }
