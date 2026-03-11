@@ -17,17 +17,17 @@ Data quality features such as usability or trustworthiness are typically asserte
 associating _contextual information_ (about data quality) with _target data_.
 Both contextual information and target data can consist of sets of RDF statements and graphs,
 often traveling together and being queried as a single KG.
-There are many possible _annotation models_---i.e., RDF-level models to associate contextual information with target data (e.g., reification, graphs)---and
+There are many possible _annotation models_--i.e., RDF-level models to associate contextual information with target data (e.g., reification, graphs)--and
 even more _annotation methods_---i.e., application-specific instances of an annotation model.
 These annotation methods rely on application-specific specifications and protocol definitions,
 as illustrated by mature annotation systems
 such as DQV, nanopublications [^nanopublications],
 RO-Crates [^rocrates], and [W3C Verifiable Credentials (VCs)](cite:cites w3c-vc-data-model-2-20250515).
 
-[^nanopublications]: Nanopublication Guidelines: https://nanopub.net/guidelines/working_draft/
-[^rocrates]: RO-Crate Metadata Specification: https://w3id.org/ro/crate/1.2
+[^nanopublications]: Nanopublication Guidelines: [https://nanopub.net/guidelines/working_draft/](https://nanopub.net/guidelines/working_draft/)
+[^rocrates]: RO-Crate Metadata Specification: [https://w3id.org/ro/crate/1.2](https://w3id.org/ro/crate/1.2)
 
-For example, the Data Quality Vocabulary (DQV)[](cite:cites w3c-dqv-20161215) uses the term-bound annotation model,
+For example, [the Data Quality Vocabulary (DQV)](cite:cites w3c-dqv-20161215) uses the term-bound annotation model,
 where the annotation method relies on DQV-specific relations and classes.
 Data quality is represented as term-bound associations of subjects of type `dqv:QualityAnnotation` or `dqv:QualityMeasurement`
 that directly associate contextual information (of data quality) to target datasets or distributions--represented through DCAT--via the predicates `oa:hasTarget` (from the Web Annotation Ontology[^wao]) or `dqv:computedOn`, respectively.
@@ -37,13 +37,13 @@ the Head graph uses predicates such as `np:hasAssertion`, `np:hasProvenance`, an
 to relate the [nanopublication resource to its constituent graphs](cite:cites groth2010nanopub-anatomy).
 In RO-Crate, contextual information is associated more implicitly
 through the JSON-LD graph structure of the RO-Crate Metadata Document using existing vocabularies, such as Schema.org[^schema],
-where relationships between entities (e.g., dataset → file, file → creator) are encoded as [linked properties in the `@graph`](cite:cites rocrate-1.2.0-zenodo).
+where relationships between entities (e.g., dataset and an information resource publishing part of the dataset; or linking to the creator) are encoded as [linked properties in the `@graph`](cite:cites rocrate-1.2.0-zenodo).
 In the VC Data Model specification, contextual information is associated through an explicit credential structure:
 a verifiable credential is composed of core properties such as `credentialSubject`, which links to the identified subject resource,
 and `proof`, which [binds the credential to a cryptographic verification method](cite:cites w3c-vc-data-model-2-20250515).
 
-[^schema]: The schema.org initiative: https://schema.org
-[^wao]: The Web Annotation Ontology: https://www.w3.org/ns/oa
+[^schema]: The schema.org initiative: [https://schema.org](https://schema.org)
+[^wao]: The Web Annotation Ontology: [https://www.w3.org/ns/oa](https://www.w3.org/ns/oa)
 
 As these examples illustrate, annotation methods are not aligned and are not always explicitly described at the data level.
 When, for example, asserting data quality,
@@ -189,18 +189,9 @@ Solutions such as tSPARQL are left out of scope as these require SPARQL extensio
 
 ## Context Associations {#sec-context-associations}
 
-<!-- With Context Associations, our aim is to provide a general model -->
-<!-- to associate contextual information to target data in RDF knowledge graphs. -->
-To define a general annotation model,
-we must support encoding and decoding of existing annotation methods,
-including term-bound references,
-out-of-band references, single triple references,
-graph references,
-and their combinations.
-To ensure iteroperability,
-the annotation model must be expressible within the RDF 1.1 specification
-and both target data and associated contextual information must be queryable through SPARQL 1.1.
-In this section, we discuss both the Context Assocations model and how we can losslessly encode and decode between existing annotation methods and the Context Association model.
+In this chapter, we are constructing a solution to REQ1-5 which we will call Context Associations, documented in a specification[^ca].
+
+[^ca]: Available at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification)
 
 ### Annotation Model
 
