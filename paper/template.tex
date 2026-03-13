@@ -11,6 +11,11 @@
 \usepackage{framed}
 \usepackage{xcolor} % usually already loaded, but safe
 
+\usepackage{amssymb}
+\newcommand{\yes}{\ensuremath{\checkmark}}
+\newcommand{\maybe}{\textbf{?}}
+\newcommand{\no}{\ensuremath{\times}}
+
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -90,14 +95,14 @@ $endif$
 
 \begin{document}
 
-\copyrightyear{2022}
+\copyrightyear{2026}
 \copyrightclause{Copyright for this paper by its authors.
   Use permitted under Creative Commons License Attribution 4.0
   International (CC BY 4.0).}
 
 %%
 %% This command is for the conference information
-\conference{SemDH 2026:  Third International Workshop of Semantic Digital Humanities, co-located with ESWC 2026, Dubrovnik, Croatia}
+\conference{QKG@ESWC 2026 — Evaluating, Improving, and Sustaining Knowledge Graph Quality, co-located with ESWC 2026, Dubrovnik, Croatia}
 
 \title{$title$}
 
@@ -114,6 +119,6 @@ $body$
 
 
 \bibliographystyle{plainnat}
-\bibliography{references}
+\bibliography{content/references}
 
 \end{document}

@@ -1,4 +1,4 @@
-## Introduction {#sec-intro}
+# Introduction {#sec-intro}
 
 <!-- {:.comment data-author="BenDM"}
 NO FEEDBACK HERE, JUST NOTES FROM BEN:
@@ -18,7 +18,7 @@ associating _contextual information_ (about data quality) with _target data_.
 Both contextual information and target data can consist of sets of RDF statements and graphs,
 often traveling together and being queried as a single KG.
 There are many possible _annotation models_--i.e., RDF-level models to associate contextual information with target data (e.g., reification, graphs)--and
-even more _annotation methods_---i.e., application-specific instances of an annotation model.
+even more _annotation methods_ -- i.e., application-specific instances of an annotation model.
 These annotation methods rely on application-specific specifications and protocol definitions,
 as illustrated by mature annotation systems
 such as DQV, nanopublications [@nanopub-guidelines-working-draft],
@@ -27,9 +27,9 @@ RO-Crates [@rocrate-1.2.0-zenodo], and W3C Verifiable Credentials (VCs) [@w3c-vc
 For example, the Data Quality Vocabulary (DQV) [@w3c-dqv-20161215] uses the term-bound annotation model,
 where the annotation method relies on DQV-specific relations and classes.
 Data quality is represented as term-bound associations of subjects of type `dqv:QualityAnnotation` or `dqv:QualityMeasurement`
-that directly associate contextual information (of data quality) to target datasets or distributions--represented through DCAT--via the predicates `oa:hasTarget` (from the Web Annotation Ontology\footnote{\url{https://www.w3.org/ns/oa}}) or `dqv:computedOn`, respectively.
+that directly associate contextual information (of data quality) to target datasets or distributions -- represented through DCAT -- via the predicates `oa:hasTarget` (from the Web Annotation Ontology\footnote{\url{https://www.w3.org/ns/oa}}) or `dqv:computedOn`, respectively.
 In the Nanopublication specification, contextual information is associated through explicit graph structuring:
-a nanopublication is composed of four named graphs--Head, Assertion, Provenance, and PublicationInfo--and
+a nanopublication is composed of four named graphs -- Head, Assertion, Provenance, and PublicationInfo -- and
 the Head graph uses predicates such as `np:hasAssertion`, `np:hasProvenance`, and `np:hasPublicationInfo`
 to relate the nanopublication resource to its constituent graphs [@groth2010nanopub-anatomy].
 In RO-Crate, contextual information is associated more implicitly
@@ -51,7 +51,7 @@ In this paper, we present Context Associations:
 an approach, together with an associated specification and tooling,
 to uniformly model and query
 which contextual information is associated with which statements in an RDF knowledge graph.
-Context Associations is available at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification).
+Context Associations is available at <https://anonymous.4open.science/r/context-associations-encoding-decoding-F134/RDF%20Context%20Associations%20Specification.htm>.
 The approach relates to a demonstrator [@dedecker2025demonstrating].
 This work elaborates on the requirements and other options that exist.
 
@@ -67,19 +67,19 @@ we put forward the following target requirements:
 
 We first give an extensive overview of the state of the art on the matter, then introduce the Context Associations approach, show how it can be applied in several use cases, and finally conclude with a summary table of the possible approaches and how they meet the aforementioned requirements.
 
-## State of the Art {#sec-sota}
+# State of the Art {#sec-sota}
 
 This section groups the existing landscape into annotation models, annotation methods,
 and annotation-related extensions to RDF/SPARQL.
 
-### Annotation models
+## Annotation models
 
 <!-- metadata representation models - part of RDF -->
 As the name suggests, the Resource Description Framework lends itself well to the description of Web resources:
 RDF is inherently aimed at the annotation of information using (Web) URI references
 as the abstraction layer for a target concept of the annotation.
 These target URIs can be
-Web resources that can be dereferenced from that target URI--following recommendations of vocabularies such as the Data Catalog Vocabulary (DCAT)--
+Web resources that can be dereferenced from that target URI -- following recommendations of vocabularies such as the Data Catalog Vocabulary (DCAT)--
 or internal entities to the RDF knowledge graph.
 <!-- scope this work to 'inline' annotation -->
 Within the scope of this paper and aligned with related work [@frey2019evaluation],
@@ -105,14 +105,12 @@ Within native RDF annotation, the boundary between contextual information and ta
 on data level, it is not possible to differentiate contextual information from target data (i.e., both are similarly bound to the same subject, predicate, or object term).
 
 <!-- reification methods are semantically difficult to process -->
-**Reification**[^reif] allows deconstructing triples to a set of triples defining the subject, predicate and object of the reified triple,
+**Reification**\footnote{\url{https://www.w3.org/TR/rdf-mt/\#Reif}} allows deconstructing triples to a set of triples defining the subject, predicate and object of the reified triple,
 to associate contextual information.
 However, RDF 1.0 Semantics state that
 that the reified statement does not entail the reification graph,
 nor vice versa,
 which complicates semantic interpretation and often requires additional conventions during processing.
-
-[^reif]: https://www.w3.org/TR/rdf-mt/#Reif
 
 **Singleton properties** are a proposed method in RDF to overload a triple predicate, similar to the working of Labeled Property Graphs [@nguyen2014don],
 in which the predicate is replaced by an instanced predicate, derived from the original predicate, that can be referenced in other statements to associate contextual information to the original relation.
@@ -125,14 +123,12 @@ the semantic relation between the name identifier and RDF graph remains under-sp
 and is typically fixed by application-level conventions [@CARROLL2005247].
 
 <!-- moved this to here for consistency -->
-With the upcoming RDF 1.2 standardization work[^rdf12],
+With the upcoming RDF 1.2 standardization work\footnote{\url{https://www.w3.org/TR/rdf12-concepts/}},
 **triple terms** (formerly known as quoted triples in RDF-star) provide a compact way to annotate individual triples.
 Triple terms can be understood as addressing the verbosity and usability limitations of reification
 while preserving statement-level expressivity.
 
-[^rdf12]: https://www.w3.org/TR/rdf12-concepts/
-
-### Annotation methods
+## Annotation methods
 
 In practice, annotation methods instantiate the above models through application-specific methods (see examples in [Section 1](#sec-intro)).
 <!-- DQV, nanopublications,
@@ -146,15 +142,12 @@ which were exemplified in [Section 1](#sec-intro). -->
 Some annotation methods build on RDF knowledge graph canonicalization
 to create a stable identifier to associate contextual information to.
 This provides a **reificiation-like** pattern that is not limited to a single term.
-Through JSON-LD expansion and with accompanying W3C CCG Note “RDF Dataset Canonicalization and Hashing” and related Data Integrity specifications, Verifiable Credentials can be interpreted as RDF datasets---with a stable identifier---for the purpose of canonicalization and cryptographic proof generation[^rdfcanon].
+Through JSON-LD expansion and with accompanying W3C CCG Note “RDF Dataset Canonicalization and Hashing” and related Data Integrity specifications, Verifiable Credentials can be interpreted as RDF datasets -- with a stable identifier -- for the purpose of canonicalization and cryptographic proof generation\footnote{\url{https://www.w3.org/TR/rdf-canon/}}.
 Specifications such as trustyURI make use of an RDF knowledge graph canonicalization algorithm to generate a hash, and
-append this hash value as the resource extension to produce stable (and verifiable) identifiers[^trustyuri].
+append this hash value as the resource extension to produce stable (and verifiable) identifiers\footnote{\url{https://trustyuri.net/spec/v1.FADQoZWcYugekAb4jW-Zm3_5Cd9tmkkYEV0bxK2fLSKao.md}}.
 <!-- BDM: I moved ODRL to future work. -->
 Many specifications, such as Nanopublications,
 make use of these **named graphs** to organize their contents and associated context in these graphs.
-
-[^rdfcanon]: https://www.w3.org/TR/rdf-canon/
-[^trustyuri]: https://trustyuri.net/spec/v1.FADQoZWcYugekAb4jW-Zm3_5Cd9tmkkYEV0bxK2fLSKao.md
 
 <!-- Shape expressions such as SHACL [citeneeded] and SHEX [citeneeded] can be used to define a specific selection of target data.
 Specifically, closed shapes in SHACL can be used, with prior work of converting shape expressions to
@@ -180,37 +173,32 @@ allows to provide a consistent JSON structure while also being interoperable wit
 However, this reliance on the default graph breaks the association when multiple credentials are merged into one RDF knowledge graph.
 
 <!--
-### Annotation-related extensions to RDF/SPARQL
+## Annotation-related extensions to RDF/SPARQL
 
 Solutions such as tSPARQL are left out of scope as these require SPARQL extensions and are thus not interoperable.
 -->
 <!-- todo: Apache Jena ARQ helps the usability of SPARQL evaluations over graphs -->
 <!-- BDM: I'd introduce ARQ when you need it, I have the feeling it's more an implementation detail than a sota -->
 
-## Context Associations {#sec-context-associations}
+# Context Associations {#sec-context-associations}
 
-In this chapter, we are constructing a solution to REQ1-5 which we will call Context Associations, documented in a specification[^ca].
-
-[^ca]: Available at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification)
+In this chapter, we are constructing a solution to REQ1-5 which we will call Context Associations, documented in a specification at <https://anonymous.4open.science/r/context-associations-encoding-decoding-F134/RDF%20Context%20Associations%20Specification.htm>.
 
 In order to support a closed set of statements (**REQ2**), Context Associations use named graphs.
-While the semantics of named graphs have been left open in the RDF1.1 specification[^ng], they are a standard RDF 1.1 pattern (**REQ1**) that can be exploited.
+While the semantics of named graphs have been left open in the RDF1.1 specification\footnote{A working group note (2014) on the semantics of RDF Datasets: \url{https://www.w3.org/TR/rdf11-datasets/}}, they are a standard RDF 1.1 pattern (**REQ1**) that can be exploited.
 Furthermore, annotations are explicit: the identifier associated with the named graph can be used in the same triple/quad store (**REQ3**) by using an RDF term.
 
-Named graphs however have two potential issues that we can work around[^pc].
+Named graphs however have two potential issues that we can work around\footnote{A blog post with more elaborate explanations: \url{https://pietercolpaert.be/linkeddata/2025/09/30/named-graphs}}.
 The first is that some quad store implementations may automatically merge certain named graphs in the default graph, assuming the named graphs are only used for partitioning.
 Here we pragmatically advice to be cautious when working with systems that work with this assumption.
-
-[^ng]: A working group note (2014) on the semantics of RDF Datasets: [https://www.w3.org/TR/rdf11-datasets/](https://www.w3.org/TR/rdf11-datasets/)
-[^pc]: A blog post with more elaborate explanations: [https://pietercolpaert.be/linkeddata/2025/09/30/named-graphs](https://pietercolpaert.be/linkeddata/2025/09/30/named-graphs)
 
 The second issue is that we need to ensure no side-effects from merging target data and contextual information:
 graph merge operations at the RDF level must be prevented.
 For this, we came up with the cunning idea of using **blank node identifiers**, also previously applied  by Braun et al. [@braun2025rdf], for the graph name of these named graphs (**REQ4**).
 This way, the scope of the context statements and its association to a target set of statements is local
 to the scope of the storage, exchange, or operation in which they are used.
-If the use of blank nodes is impractical---e.g., due to limitations of
-having to extract specific graphs based on their name value---skolem identifiers can be used
+If the use of blank nodes is impractical -- e.g., due to limitations of
+having to extract specific graphs based on their name value -- skolem identifiers can be used
 to ensure unique generation of the graph name at the time of its construction.
 
 To define the exact associations between graphs,
@@ -219,8 +207,8 @@ we make use of an anchor triple that provides a directed link between both graph
 This also allows for graph chaining, i.e., recursive annotations (**REQ5**).
 
 Context Associations explicitly provide the directed association between contextual information and target data.
-Existing annotation methods can be _encoded_ as Context Associations---typically requiring
-customized processing as existing annotation methods may have implicit conventions---and
+Existing annotation methods can be _encoded_ as Context Associations -- typically requiring
+customized processing as existing annotation methods may have implicit conventions -- and
 Context Associations can be _decoded_ into existing annotation methods in a general fashion.
 Encoding and decoding is lossless at semantic level.
 Encoding typically follows the following steps:
@@ -236,7 +224,7 @@ For (default and named) **graphs**, rename the graph to a named graph with blank
 For **term-bound linking**, put target data in a named graph with blanknode label.
 
 For each annotation method, customized encodings need to be provided.
-These, and a general decoding of Context Associations are validated through a SPARQL CONSTRUCT Queries, are made available at https://github.com/KNowledgeOnWebScale/context-associations-encoding-decoding under the permissive MIT license.
+These, and a general decoding of Context Associations are validated through a SPARQL CONSTRUCT Queries, are made available at <https://anonymous.4open.science/r/context-associations-encoding-decoding-F134/> under the permissive MIT license.
 
 <!-- **For a target RDF predicate term**, we cannot uniformly retain the original predicate in our encoding,
 as named graphs cannot inherently be used to model annotations on triple predicates.
@@ -285,15 +273,15 @@ cannot be verified in the Context Association encoding
 because some signature suites rely on a specific JSON frame.
 They can only be verified after decoding and reformatting the data in the correct structure.
 
-## Use Case Application {#sec-demonstration}
+# Use Case Application {#sec-demonstration}
 
 To demonstrate the need for Context Associations,
 we take a use-case of a research output of a researcher.
 The contextual information consists of an RO-Crate
-defining the research output, dataset, and author information,
-a nanopublication of the publication,
-and a verifiable credential that states the diploma of the researcher.
-All demonstration data is available at https://github.com/KNowledgeOnWebScale/context-associations-encoding-decoding.
+defining the research output, dataset, and author information (Listing \ref{lst:rocrate}),
+a nanopublication of the publication  (Listing \ref{lst:nano}),
+and a verifiable credential that states the diploma of the researcher (Listing \ref{lst:vc}).
+All demonstration data is available at <https://anonymous.4open.science/r/context-associations-encoding-decoding-F134/>.
 
 Below, we include the relevant encoded Context Associations,
 for the RO-Crate, nanopublication, and verifiable credential.
@@ -314,18 +302,27 @@ through its JSON-LD context. -->
 
 <!-- todo: get an idea as to how we associate metadata between external resources, e.g. `metadata.json definesInformationOver data.json`. -->
 
-
-
-<figure id="ro-crate-code" class="listing">
-````/code/ca_ro-crate_snip.txt````
-<figcaption markdown="block">
-Relevant RO-Crate Context Associations
-</figcaption>
-</figure>
+\begin{listing}
+\caption{Relevant RO-Crate Context Associations}\label{lst:rocrate}
+\begin{lstlisting}[language=SPARQL]
+_:graph1 {
+  robase:survey-responses-2019.csv schema:contentSize "26452" ;
+    schema:encodingFormat "text/csv" ;
+    schema:name "Survey responses" ;
+    a schema:MediaObject .
+}
+_:graph2 {
+  _:graph2 ca:aboutGraph _:graph1.
+  robase:ro-crate-metadata.json <http://purl.org/dc/terms/conformsTo> <https://w3id.org/ro/crate/1.1> ;
+    schema:about robase: ; a schema:CreativeWork ;
+    pav:createdBy ex:Alice .
+}
+\end{lstlisting}
+\end{listing}
 
 <!-- 
 
-### Nanopublication
+## Nanopublication
 Nanopublications inherently already make use of the named graph paradigm in structuring 
 their associations of information to a target set of statements.
 Encoding a nanopublication to the context association model
@@ -337,15 +334,23 @@ only requires the explicit linking of the metadata graphs to the target data gra
 piece of code to translate an example nanopub to context associations
   Nanopublication stating that  -->
 
-<figure id="nanopub-code" class="listing">
-````/code/ca_nanopub_snip.txt````
-<figcaption markdown="block">
-Relevant nanopublication Context Associations
-</figcaption>
-</figure>
+\begin{listing}
+\caption{Relevant nanopublication Context Associations}\label{lst:nano}
+\begin{lstlisting}[language=SPARQL]
+_:graph1 {
+  ca:graphName "http://example.org/nanopub/np1#" ;
+  ex:comment a ex:Comment ; ex:hasCommentText "My survey showed a SUS score of 3.4" ;
+}
+_:graph2 {
+  this:Provenance ca:aboutGraph _:graph1 .
+  this:Assertion prov:wasAttributedTo ex:Alice ; 
+    prov:generatedAtTime "2026-02-19T10:30:00Z"^^xsd:dateTime .
+}
+\end{lstlisting}
+\end{listing}
 
 <!-- 
-### W3C Verifiable credentials
+## W3C Verifiable credentials
 The W3C Verifiable Credentials (VC) data model contains its credential contents and annotations in the default graph, 
 except for the credential signature information,
 which is stored in the "proof graph",
@@ -366,21 +371,27 @@ entails the separation of the data contents from the credential or presentation 
 after which the relevant anchor links are added.
   -->
 
-<figure id="vc-code" class="listing">
-````/code/ca_vc_snip.txt````
-<figcaption markdown="block">
-Relevant VC Context Associations
-</figcaption>
-</figure>
+\begin{listing}
+\caption{Relevant VC Context Associations}\label{lst:vc}
+\begin{lstlisting}[language=SPARQL]
+_:data { ex:Alice ex:hasDiploma ex:MasterDegree . }
+_:proof {
+    _:proof ca:aboutGraph _:data ;
+        dct:created "2026-02-19T10:32:00Z"^^xsd:dateTime ;
+        sec:cryptosuite "eddsa-rdfc-2022"^^sec:cryptosuiteString ;
+        sec:proofValue> "[...]"^^sec:multibase.
+}
+\end{lstlisting}
+\end{listing}
 
 <!-- 
-### ODRL Policy
+## ODRL Policy
 
 merge all outputs in a triplestore
 one query to show 'what types of contextual information are asociated with my target data'
 reverse piece/pieces of code to translate context associations to originals
 
-We demonstrate that---for each of the aforementioned annotation systems---statements containing contextual information
+We demonstrate that -- for each of the aforementioned annotation systems -- statements containing contextual information
 can be uniformly associated with target statements and queried across applications.
 Full reconstruction of the original formats from their Context Association representation
 is feasible when application-specific implied modeling information is made explicit. -->
@@ -444,25 +455,32 @@ To solve the problems encountered in the extraction of the annotation chains,
 especially the lack of support for constructing graphs,
 which is impossible to work around in the native SPARQL evaluation, -->
 
-<figure id="arq-code" class="listing">
-````/code/jena-arq_snip.txt````
-<figcaption markdown="block">
-Extraction of the named graphs annotation chains with a single construct query using Apache Jena ARQ.
-</figcaption>
-</figure>
+\begin{listing}
+\caption{Extraction of the named graphs annotation chains with a single construct query using Apache Jena ARQ.}\label{lst:query}
+\begin{lstlisting}[language=SPARQL]
+CONSTRUCT {
+  GRAPH ?g { ?s ?p ?o }
+} WHERE {
+  GRAPH ?target {
+    { ?x ?y ex:Alice . } UNION { ex:Alice ?y ?z . }
+  }
+  GRAPH <urn:x-arq:UnionGraph> {
+    ?source ca:about* ?target .
+  }
+  GRAPH ?source { ?s ?p ?o }
+}
+\end{lstlisting}
+\end{listing}
 
 However,
-we can make use of the ARQ query engine provided by Apache Jena[^jena].
+we can make use of the ARQ query engine provided by Apache Jena\footnote{\url{https://jena.apache.org/index.html}}.
 This SPARQL processor provides two functions that extend beyond the SPARQL specification,
 which allow us to perform the extraction in a single iteration:
-(1) ARQ provides a union graph under the identifier `urn:x-arq:UnionGraph`---a materialized union of the named graphs present in the queried RDF dataset---which allows us to extract the anchor triples from all graphs in one iteration; and
+(1) ARQ provides a union graph under the identifier `urn:x-arq:UnionGraph` -- a materialized union of the named graphs present in the queried RDF dataset -- which allows us to extract the anchor triples from all graphs in one iteration; and
 (2) ARQ supports the creation of named graphs in the `CONSTRUCT` clause of a SPARQL query, which
 enables us to directly re-create the named graphs in the annotation chain,
 without having to iterate separately over each graph.
-Below, we show the ARQ query that allows us to uniformly gather all contextual information of `ex:Alice` .
-
-[^jena]: https://jena.apache.org/index.html
-
+Listing \ref{lst:query} shows the ARQ query that allows us to uniformly gather all contextual information of `ex:Alice` .
 
 <!-- Firstly,
 where the extraction of anchor triples can be worked around by storing them in the default graph,
@@ -477,9 +495,9 @@ without having to iterate separately over each graph.
 -->
 
 <!-- 
-## Comparison {#sec-comparison}
+# Comparison {#sec-comparison}
 
-TODO include table that gives overview of (✅, ❓, or ❌)
+TODO include table that gives overview of (\yes, \maybe, or \no)
 
 - reification
 - singleton property
@@ -494,11 +512,11 @@ for requirements
 - annotation level
 - 
 
-- interoperable (✅, ❓= needs protocol-specific queries, ❌ = RDF/SPARQL needs extensions)
-- RDF support (✅, ❓= only one triple/only triples associated to one subject/only triples/only triples and quads/...)
-- explicit (✅, or ❌)
-- immutable (✅, or ❌)
-- recursive (✅, or ❌)
+- interoperable (\yes, \maybe= needs protocol-specific queries, \no = RDF/SPARQL needs extensions)
+- RDF support (\yes, \maybe= only one triple/only triples associated to one subject/only triples/only triples and quads/...)
+- explicit (\yes, or \no)
+- immutable (\yes, or \no)
+- recursive (\yes, or \no)
 
 tSPARQL and RO-Crate are taken out of scope
 as tSPARQL needs custom extensions
@@ -506,26 +524,31 @@ and RO-Crate's association model is outside the scope of the RDF data. -->
 
 <!-- me thinks it's gonna look something like this -->
 
-<figure id="table-comparison" class="table" markdown="block">
+\begin{table}[tbp]
+\centering
+\small
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{|p{0.12\linewidth}|p{0.10\linewidth}|p{0.12\linewidth}|p{0.18\linewidth}|p{0.12\linewidth}|p{0.13\linewidth}|p{0.15\linewidth}|}
+\hline
+ & Reification & Singleton property & Default graph and named graph & Named graphs & Term-bound & Context Associations \\
+\hline
+Interoperable & \yes & \yes & \maybe & \maybe & \maybe & \maybe \\
+\hline
+RDF Support & one triple & one triple & triples/triple terms & triples/triple terms & Term-bound triples & \yes \\
+\hline
+Explicit & \yes & \yes & \yes & \yes & \maybe & \yes \\
+\hline
+Immutable & \maybe & \maybe & default graph collisions & \maybe & \maybe & \yes \\
+\hline
+Recursive & \yes & \yes & \no: default graph & \yes & \yes & \yes \\
+\hline
+\end{tabular}
+\caption{Comparison of the requirements of existing annotation models and methods with Context Associations. At \emph{Interoperable}, \maybe\ denotes that custom annotation methods are introduced to interpret the annotation model. At Immutable, \maybe\ denotes immutability requires globally unique and non-colliding identifiers.}
+\label{table-comparison}
+\end{table}
 
-|               | Reification              | Singleton property       | Default graph and named graph  | Named graphs   | Term-bound | Context Associations |
-|---------------|--------------------------|--------------------------|------------------------------------------|-------------------------------|--------------------------------------------------|----------------------|
-| Interoperable | ✅                       | ✅                       | ❓                                       | ❓                            | ❓                                                    | ❓                    |
-| RDF Support   | one triple      | one triple      | triples/<br/>triple terms            | triples/<br/>triple terms | Term-bound triples                          | ✅                    |
-| Explicit      | ✅                       | ✅                       | ✅                                       | ✅                            | ❓                                                    | ✅                    |
-| Immutable     | ❓ | ❓ | default graph collisions             | ❓      | ❓                              | ✅                    |
-| Recursive     | ✅                       | ✅                       | ❌: default graph                        | ✅                            | ✅                                                    | ✅                    |
-
-<figcaption markdown="block">
-
-Comparison of the requirements of existing annotation models and methods with Context Associations.
-At _Interoperable_, ❓ denotes that custom annotation methods are introduced to interpret the annotation model.
-At Immutable, ❓ denotes immutability requires globally unique and non-colliding identifiers.
-
-</figcaption>
-</figure>
-
-## Conclusion {#sec-conclusion}
+# Conclusion {#sec-conclusion}
 
 <!--
 Context Associations is an approach and associated specification and tooling
@@ -545,13 +568,13 @@ Although Context Associations in its current form is a custom annotation method,
 being a superset of existing models and methods shows the potential to increase interopability across existing annotation models and methods.
 Our use case demonstrations shows its practical feasibility.
 
-Context Associations does not solve the native ambiguity between 'what is metdata vs what is data',
+Context Associations does not solve the native ambiguity between 'what is metadata vs what is data',
 however, it does allow to explicitly scope contextual information from target data in existing annotation methods.
 The demonstration shows that this allows uniformly extracting contextual information across existing methods,
 and thus provide a more complete picture of data quality assertions of the same target data.
 
 <!-- By providing a uniform representation of context statements associated with target RDF statements, -->
-Our previous work showed a first application of Context Associations in the scope of ODRL,
+A first application of Context Associations happened in the scope of ODRL [@dedecker2025demonstrating],
 and future work involves further application of Context Associations to improve enabling of
 discovery, exchange, storage, and processing of heterogenous annotations.
 
