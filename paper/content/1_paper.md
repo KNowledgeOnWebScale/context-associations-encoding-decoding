@@ -21,26 +21,23 @@ There are many possible _annotation models_--i.e., RDF-level models to associate
 even more _annotation methods_---i.e., application-specific instances of an annotation model.
 These annotation methods rely on application-specific specifications and protocol definitions,
 as illustrated by mature annotation systems
-such as DQV, nanopublications [](cite:cites nanopub-guidelines-working-draft),
-RO-Crates [](cite:cites rocrate-1.2.0-zenodo), and [W3C Verifiable Credentials (VCs)](cite:cites w3c-vc-data-model-2-20250515).
+such as DQV, nanopublications [@nanopub-guidelines-working-draft],
+RO-Crates [@rocrate-1.2.0-zenodo], and W3C Verifiable Credentials (VCs) [@w3c-vc-data-model-2-20250515].
 
-For example, [the Data Quality Vocabulary (DQV)](cite:cites w3c-dqv-20161215) uses the term-bound annotation model,
+For example, the Data Quality Vocabulary (DQV) [@w3c-dqv-20161215] uses the term-bound annotation model,
 where the annotation method relies on DQV-specific relations and classes.
 Data quality is represented as term-bound associations of subjects of type `dqv:QualityAnnotation` or `dqv:QualityMeasurement`
-that directly associate contextual information (of data quality) to target datasets or distributions--represented through DCAT--via the predicates `oa:hasTarget` (from the Web Annotation Ontology[^wao]) or `dqv:computedOn`, respectively.
+that directly associate contextual information (of data quality) to target datasets or distributions--represented through DCAT--via the predicates `oa:hasTarget` (from the Web Annotation Ontology\footnote{\url{https://www.w3.org/ns/oa}}) or `dqv:computedOn`, respectively.
 In the Nanopublication specification, contextual information is associated through explicit graph structuring:
 a nanopublication is composed of four named graphs--Head, Assertion, Provenance, and PublicationInfo--and
 the Head graph uses predicates such as `np:hasAssertion`, `np:hasProvenance`, and `np:hasPublicationInfo`
-to relate the [nanopublication resource to its constituent graphs](cite:cites groth2010nanopub-anatomy).
+to relate the nanopublication resource to its constituent graphs [@groth2010nanopub-anatomy].
 In RO-Crate, contextual information is associated more implicitly
-through the JSON-LD graph structure of the RO-Crate Metadata Document using existing vocabularies, such as Schema.org[^schema],
-where relationships between entities (e.g., dataset and an information resource publishing part of the dataset; or linking to the creator) are encoded as [linked properties in the `@graph`](cite:cites rocrate-1.2.0-zenodo).
+through the JSON-LD graph structure of the RO-Crate Metadata Document using existing vocabularies, such as Schema.org\footnote{\url{https://schema.org}},
+where relationships between entities (e.g., dataset and an information resource publishing part of the dataset; or linking to the creator) are encoded as linked properties in the `@graph` [@rocrate-1.2.0-zenodo].
 In the VC Data Model specification, contextual information is associated through an explicit credential structure:
 a verifiable credential is composed of core properties such as `credentialSubject`, which links to the identified subject resource,
-and `proof`, which [binds the credential to a cryptographic verification method](cite:cites w3c-vc-data-model-2-20250515).
-
-[^schema]: The schema.org initiative: [https://schema.org](https://schema.org)
-[^wao]: The Web Annotation Ontology: [https://www.w3.org/ns/oa](https://www.w3.org/ns/oa)
+and `proof`, which binds the credential to a cryptographic verification method [@w3c-vc-data-model-2-20250515].
 
 As these examples illustrate, annotation methods are not aligned and are not always explicitly described at the data level.
 When, for example, asserting data quality,
@@ -55,7 +52,7 @@ an approach, together with an associated specification and tooling,
 to uniformly model and query
 which contextual information is associated with which statements in an RDF knowledge graph.
 Context Associations is available at [https://w3id.org/context-associations/specification](https://w3id.org/context-associations/specification).
-The approach was previously [part of a demonstrator](cite:cites dedecker2025demonstrating).
+The approach relates to a demonstrator [@dedecker2025demonstrating].
 This work elaborates on the requirements and other options that exist.
 
 To achieve a uniformly queryable annotation method,
@@ -85,11 +82,11 @@ These target URIs can be
 Web resources that can be dereferenced from that target URI--following recommendations of vocabularies such as the Data Catalog Vocabulary (DCAT)--
 or internal entities to the RDF knowledge graph.
 <!-- scope this work to 'inline' annotation -->
-Within the scope of this paper and aligned with related work [](cite:cites frey2019evaluation),
+Within the scope of this paper and aligned with related work [@frey2019evaluation],
 we will cover annotation models that
 describe assocating contextual information _within the confines of an RDF Dataset_, i.e., assume that Web dereferencing is no longer needed.
 
-The work of Müller et al. [](cite:cites frey2019evaluation) gives an overview
+The work of Müller et al. [@frey2019evaluation] gives an overview
 of annotation models that are part of the RDF model,
 namely _reification_, _singleton properties_, and _named graphs_.
 They conclude that while reification offers fine-grained statement-level annotation,
@@ -117,7 +114,7 @@ which complicates semantic interpretation and often requires additional conventi
 
 [^reif]: https://www.w3.org/TR/rdf-mt/#Reif
 
-**Singleton properties** are a proposed method in RDF to overload a triple predicate, similar to the working of Labeled Property Graphs [](cite:cites nguyen2014don),
+**Singleton properties** are a proposed method in RDF to overload a triple predicate, similar to the working of Labeled Property Graphs [@nguyen2014don],
 in which the predicate is replaced by an instanced predicate, derived from the original predicate, that can be referenced in other statements to associate contextual information to the original relation.
 <!-- todo: discuss semantics of approach. -->
 
@@ -125,7 +122,7 @@ in which the predicate is replaced by an instanced predicate, derived from the o
 a (name, RDF graph) pair called a named graph.
 However, similar to reification,
 the semantic relation between the name identifier and RDF graph remains under-specified
-and is typically fixed by application-level conventions [](cite:cites CARROLL2005247).
+and is typically fixed by application-level conventions [@CARROLL2005247].
 
 <!-- moved this to here for consistency -->
 With the upcoming RDF 1.2 standardization work[^rdf12],
@@ -209,7 +206,7 @@ Here we pragmatically advice to be cautious when working with systems that work 
 
 The second issue is that we need to ensure no side-effects from merging target data and contextual information:
 graph merge operations at the RDF level must be prevented.
-For this, we came up with the cunning idea of using **blank node identifiers**, also previously applied [by Braun et al.](cite:cites braun2025rdf), for the graph name of these named graphs (**REQ4**).
+For this, we came up with the cunning idea of using **blank node identifiers**, also previously applied  by Braun et al. [@braun2025rdf], for the graph name of these named graphs (**REQ4**).
 This way, the scope of the context statements and its association to a target set of statements is local
 to the scope of the storage, exchange, or operation in which they are used.
 If the use of blank nodes is impractical---e.g., due to limitations of
