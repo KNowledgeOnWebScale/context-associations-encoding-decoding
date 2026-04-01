@@ -1,1 +1,12 @@
 .venv/
+*.abs
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.tex
+*.xmpdata
+*.xmpi
+template.pdf
